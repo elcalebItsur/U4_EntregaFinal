@@ -1,0 +1,70 @@
+.productos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+.producto-card {
+    background: #1e1e1e;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #0001;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: box-shadow 0.2s;
+    border: 1px solid #333;
+    color: #fff;
+}
+.producto-card img {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+.producto-card h3 {
+    margin: 0.5rem 0 0.2rem 0;
+    font-size: 1.1rem;
+    color: #44ff99;
+}
+.producto-card p {
+    margin: 0.2rem 0 0.5rem 0;
+    color: #cccccc;
+    font-size: 0.95rem;
+}
+.producto-card .precio {
+    font-weight: bold;
+    color: #44ff99;
+    margin-bottom: 0.7rem;
+}
+.producto-card .acciones {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    justify-content: center;
+}
+.producto-card button {
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 0.9rem;
+    font-size: 1rem;
+    cursor: pointer;
+    background: #44ff99;
+    color: #101010;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: background 0.2s;
+}
+.producto-card button.favorito {
+    background: #eab308;
+    color: #333;
+}
+.producto-card button:hover {
+    background: #14532d;
+    color: #fff;
+}
+.producto-card button.favorito:hover {
+    background: #facc15;
+}
