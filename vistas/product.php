@@ -1,19 +1,20 @@
+<?php
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Camisa Moderna - Textisur</title>
-    <link rel="stylesheet" href="css/main.css" />
-    <link rel="stylesheet" href="css/product.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/product.css" />
 </head>
 <body>
     <header>
         <h1 class="logo" style="cursor: pointer;" onclick="location.href='index.php'">Textisur</h1>
     </header>
-
     <main class="vista-producto">
-        <img src="assets/images/camisa1.webp" alt="Camisa Moderna" />
+        <img src="../assets/images/camisa1.webp" alt="Camisa Moderna" />
         <div class="info">
             <h2>Camisa Polo</h2>
             <p>Descripción del producto. Tallas disponibles: S, M, L, XL.</p>
@@ -35,6 +36,5 @@
         </div>
     </main>
     <button class="back-button" onclick="location.href='index.php'">Regresar</button>
-    
 </body>
 </html>
