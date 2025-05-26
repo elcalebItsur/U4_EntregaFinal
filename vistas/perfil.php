@@ -6,17 +6,40 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 $mensaje = '';
+$usuario_id = $_SESSION['usuario_id'];
+// Obtener datos actuales del usuario
+$stmt = $pdo->prepare('SELECT * FROM usuarios WHERE id = ?');
+$stmt->execute([$usuario_id]);
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = trim($_POST['nombre'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $telefono = trim($_POST['telefono'] ?? '');
     $fecha_nacimiento = trim($_POST['fecha_nacimiento'] ?? '');
-    $usuario_id = $_SESSION['usuario_id'];
-    $stmt = $pdo->prepare('UPDATE usuarios SET nombre = ?, email = ?, telefono = ?, fecha_nacimiento = ? WHERE id = ?');
-    $stmt->execute([$nombre, $email, $telefono, $fecha_nacimiento, $usuario_id]);
+    $foto_perfil = $usuario['foto_perfil'];
+    // Manejo de la imagen de perfil
+    if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === UPLOAD_ERR_OK) {
+        $tmp_name = $_FILES['foto_perfil']['tmp_name'];
+        $original_name = basename($_FILES['foto_perfil']['name']);
+        $ext = strtolower(pathinfo($original_name, PATHINFO_EXTENSION));
+        $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+        if (in_array($ext, $allowed)) {
+            $new_name = uniqid('perfil_') . '.' . $ext;
+            $destino = '../assets/images/' . $new_name;
+            if (move_uploaded_file($tmp_name, $destino)) {
+                $foto_perfil = $new_name;
+            }
+        }
+    }
+    $stmt = $pdo->prepare('UPDATE usuarios SET nombre = ?, email = ?, telefono = ?, fecha_nacimiento = ?, foto_perfil = ? WHERE id = ?');
+    $stmt->execute([$nombre, $email, $telefono, $fecha_nacimiento, $foto_perfil, $usuario_id]);
     $_SESSION['usuario'] = $nombre;
     $_SESSION['email'] = $email;
     $mensaje = 'Perfil actualizado correctamente';
+    // Refrescar datos
+    $stmt = $pdo->prepare('SELECT * FROM usuarios WHERE id = ?');
+    $stmt->execute([$usuario_id]);
+    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 ?>
 
@@ -76,7 +99,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <main class="profile-container">
         <div class="profile-header">
             <div class="profile-avatar">
-                <?php echo strtoupper(substr($_SESSION['usuario'], 0, 1)); ?>
+                <?php if (!empty($usuario['foto_perfil'])): ?>
+                    <img src="../assets/images/<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Foto de perfil" style="width:100px;height:100px;border-radius:50%;object-fit:cover;" />
+                <?php else: ?>
+                    <?php echo strtoupper(substr($_SESSION['usuario'], 0, 1)); ?>
+                <?php endif; ?>
             </div>
             <div>
                 <h2 style="color:#44ff99;">Mi Perfil</h2>
@@ -91,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endif; ?>
         
-        <form method="POST" class="profile-form">
+        <form method="POST" class="profile-form" enctype="multipart/form-data">
             <div class="form-group">
                 <label>Nombre completo</label>
                 <input type="text" name="nombre" value="<?php echo htmlspecialchars($_SESSION['usuario']); ?>" required>
@@ -115,6 +142,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group full-width">
                 <label>Acerca de mí</label>
                 <textarea name="bio" rows="3"></textarea>
+            </div>
+            
+            <div class="form-group full-width">
+                <label>Cambiar foto de perfil</label>
+                <input type="file" name="foto_perfil" accept="image/*" />
             </div>
             
             <div class="form-group full-width" style="margin-top:1rem;">

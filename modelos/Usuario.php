@@ -11,6 +11,7 @@ class Usuario {
     public $nombre_tienda;
     public $rfc;
     public $direccion;
+    public $foto_perfil;
 
     public function __construct($data) {
         $this->nombre = $data['nombre'] ?? '';
@@ -23,6 +24,7 @@ class Usuario {
         $this->nombre_tienda = $data['nombre_tienda'] ?? '';
         $this->rfc = $data['rfc'] ?? '';
         $this->direccion = $data['direccion'] ?? '';
+        $this->foto_perfil = $data['foto_perfil'] ?? null;
     }
 }
 ?>

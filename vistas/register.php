@@ -12,14 +12,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre_tienda = trim($_POST['nombre_tienda'] ?? '');
     $rfc = trim($_POST['rfc'] ?? '');
     $direccion = trim($_POST['direccion'] ?? '');
+    $foto_perfil = null;
     $mensaje = '';
+    // Manejo de la imagen de perfil
+    if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === UPLOAD_ERR_OK) {
+        $tmp_name = $_FILES['foto_perfil']['tmp_name'];
+        $original_name = basename($_FILES['foto_perfil']['name']);
+        $ext = strtolower(pathinfo($original_name, PATHINFO_EXTENSION));
+        $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+        if (in_array($ext, $allowed)) {
+            $new_name = uniqid('perfil_') . '.' . $ext;
+            $destino = '../assets/images/' . $new_name;
+            if (move_uploaded_file($tmp_name, $destino)) {
+                $foto_perfil = $new_name;
+            }
+        }
+    }
     $stmt = $pdo->prepare('SELECT id FROM usuarios WHERE email = ?');
     $stmt->execute([$email]);
     if ($stmt->fetch()) {
         $mensaje = 'El correo ya está registrado.';
     } else {
-        $stmt = $pdo->prepare('INSERT INTO usuarios (nombre, email, password, telefono, genero, fecha_nacimiento, tipo, nombre_tienda, rfc, direccion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-        $stmt->execute([$nombre, $email, $password, $telefono, $genero, $fecha_nacimiento, $tipo, $nombre_tienda, $rfc, $direccion]);
+        $stmt = $pdo->prepare('INSERT INTO usuarios (nombre, email, password, telefono, genero, fecha_nacimiento, tipo, nombre_tienda, rfc, direccion, foto_perfil) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt->execute([$nombre, $email, $password, $telefono, $genero, $fecha_nacimiento, $tipo, $nombre_tienda, $rfc, $direccion, $foto_perfil]);
         $mensaje = '¡Registro exitoso! Ahora puedes iniciar sesión.';
     }
 }
@@ -88,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php echo htmlspecialchars($mensaje); ?>
             </div>
         <?php endif; ?>
-        <form action="register.php" method="POST" onsubmit="return validarRegistro(event)">
+        <form action="register.php" method="POST" enctype="multipart/form-data" onsubmit="return validarRegistro(event)">
             <label>Nombre completo:</label>
             <input type="text" name="nombre" id="nombre" required />
             <label>Correo electrónico:</label>
@@ -121,6 +136,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label>Dirección:</label>
                 <input type="text" name="direccion" id="direccion" />
             </div>
+            <label>Foto de perfil (opcional):</label>
+            <input type="file" name="foto_perfil" accept="image/*" />
             <button class="btn-primary" type="submit">Registrarse</button>
             <p>¿Ya tienes cuenta? <a href="login.php">Inicia sesión</a></p>
         </form>

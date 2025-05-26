@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     nombre_tienda VARCHAR(100),
     rfc VARCHAR(20),
     direccion VARCHAR(255),
+    foto_perfil VARCHAR(255), -- Nuevo campo para la foto de perfil
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
