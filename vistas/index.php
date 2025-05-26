@@ -1,5 +1,11 @@
 <?php
-// ...existing code...
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once '../datos/conexion.php';
+$stmt = $pdo->prepare('SELECT foto_perfil FROM usuarios WHERE id = ?');
+$stmt->execute([$_SESSION['usuario_id']]);
+$foto = $stmt->fetchColumn();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -72,149 +78,63 @@
     </script>
 </head>
 <body>
-    <!-- Reemplazar solo la parte del header (desde <header> hasta </header>) con este código: -->
-<header>
-    <div class="header-content">
-        <h1 class="logo" onclick="location.href='index.php'">Textisur</h1>
-        <nav>
-            <ul>
-                <li><a href="index.php">Inicio</a></li>
-                <li><a href="favorites.php">Favoritos</a></li>
-                <li><a href="cart.php">Carrito</a></li>
-                <li><a href="about.php">Vende</a></li>
-                <li><a href="acerca.php" class="btn-accent">Acerca de</a></li>
-                <?php if (isset($_SESSION['usuario'])): ?>
-                    <li class="user-menu">
-                        <button class="user-avatar-btn" id="user-avatar-btn">
-                            <?php
-                            require_once '../datos/conexion.php';
-                            $stmt = $pdo->prepare('SELECT foto_perfil FROM usuarios WHERE id = ?');
-                            $stmt->execute([$_SESSION['usuario_id']]);
-                            $foto = $stmt->fetchColumn();
-                            if ($foto): ?>
-                                <img src="../assets/images/<?php echo htmlspecialchars($foto); ?>" alt="Perfil" />
-                            <?php else: ?>
-                                <span class="avatar-inicial"><?php echo strtoupper(substr($_SESSION['usuario'],0,1)); ?></span>
-                            <?php endif; ?>
-                        </button>
-                    </li>
-                <?php else: ?>
-                    <li><a href="login.php" class="btn-primary">Iniciar Sesión</a></li>
-                    <li><a href="register.php" class="btn-secondary">Registrarse</a></li>
-                <?php endif; ?>
-            </ul>
-        </nav>
-    </div>
-</header>
-<?php if (isset($_SESSION['usuario'])): ?>
-<div id="user-modal" class="user-modal" style="display:none;">
-    <div class="user-modal-content">
-        <button class="user-modal-close">&times;</button>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;">
-            <?php if ($foto): ?>
-                <img src="../assets/images/<?php echo htmlspecialchars($foto); ?>" alt="Perfil" style="width:80px;height:80px;border-radius:50%;object-fit:cover;box-shadow:0 2px 8px #0003;" />
-            <?php else: ?>
-                <div style="width:80px;height:80px;border-radius:50%;background:#44ff99;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#181818;font-size:2.2rem;">
-                    <?php echo strtoupper(substr($_SESSION['usuario'],0,1)); ?>
-                </div>
-            <?php endif; ?>
-            <div style="text-align:center;">
-                <div style="font-size:1.2rem;font-weight:600;"> <?php echo htmlspecialchars($_SESSION['usuario']); ?> </div>
-                <div style="color:#aaa;font-size:0.98rem;"> <?php echo htmlspecialchars($_SESSION['email']); ?> </div>
-            </div>
+    <header>
+        <div class="header-content">
+            <h1 class="logo" onclick="location.href='index.php'">Textisur</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.php">Inicio</a></li>
+                    <li><a href="favorites.php">Favoritos</a></li>
+                    <li><a href="cart.php">Carrito</a></li>
+                    <li><a href="about.php">Vende</a></li>
+                    <li><a href="acerca.php" class="btn-accent">Acerca de</a></li>
+                    <?php if (isset($_SESSION['usuario'])): ?>
+                        <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'Vendedor'): ?>
+                            <li><a href="admin_tienda.php" class="btn-primary">Administrar Tienda</a></li>
+                        <?php endif; ?>
+                        <li class="user-menu">
+                            <button class="user-avatar-btn" id="user-avatar-btn">
+                                <?php
+                                $foto = $stmt->fetchColumn();
+                                if ($foto): ?>
+                                    <img src="../assets/images/<?php echo htmlspecialchars($foto); ?>" alt="Perfil" />
+                                <?php else: ?>
+                                    <span class="avatar-inicial"><?php echo strtoupper(substr($_SESSION['usuario'],0,1)); ?></span>
+                                <?php endif; ?>
+                            </button>
+                        </li>
+                    <?php else: ?>
+                        <li><a href="login.php" class="btn-primary">Iniciar Sesión</a></li>
+                        <li><a href="register.php" class="btn-secondary">Registrarse</a></li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
         </div>
-        <ul class="user-menu-list">
-            <li><a href="perfil.php"><i class="fa fa-edit"></i> Editar perfil</a></li>
-            <li><a href="ver_perfil.php"><i class="fa fa-user"></i> Ver perfil</a></li>
-            <li><a href="../logout.php" class="btn-secondary"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a></li>
-        </ul>
-    </div>
-</div>
-<?php endif; ?>
+    </header>
     <?php if (isset($_SESSION['usuario'])): ?>
     <div id="user-modal" class="user-modal" style="display:none;">
         <div class="user-modal-content">
-            <button class="user-modal-close" onclick="document.getElementById('user-modal').style.display='none'">&times;</button>
-            <h3>Mi Cuenta</h3>
+            <button class="user-modal-close">&times;</button>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;">
+                <?php if ($foto): ?>
+                    <img src="../assets/images/<?php echo htmlspecialchars($foto); ?>" alt="Perfil" style="width:80px;height:80px;border-radius:50%;object-fit:cover;box-shadow:0 2px 8px #0003;" />
+                <?php else: ?>
+                    <div style="width:80px;height:80px;border-radius:50%;background:#44ff99;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#181818;font-size:2.2rem;">
+                        <?php echo strtoupper(substr($_SESSION['usuario'],0,1)); ?>
+                    </div>
+                <?php endif; ?>
+                <div style="text-align:center;">
+                    <div style="font-size:1.2rem;font-weight:600;"> <?php echo htmlspecialchars($_SESSION['usuario']); ?> </div>
+                    <div style="color:#aaa;font-size:0.98rem;"> <?php echo htmlspecialchars($_SESSION['email']); ?> </div>
+                </div>
+            </div>
             <ul class="user-menu-list">
-                <li><a href="#" onclick="mostrarSeccionUsuario('favoritos');return false;"><i class="fa fa-heart"></i> Favoritos</a></li>
-                <li><a href="#" onclick="mostrarSeccionUsuario('compras');return false;"><i class="fa fa-box"></i> Compras realizadas</a></li>
-                <li><a href="#" onclick="mostrarSeccionUsuario('perfil');return false;"><i class="fa fa-user"></i> Mi perfil</a></li>
+                <li><a href="perfil.php"><i class="fa fa-edit"></i> Editar perfil</a></li>
+                <li><a href="ver_perfil.php"><i class="fa fa-user"></i> Ver perfil</a></li>
+                <li><a href="../logout.php"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a></li>
             </ul>
-            <div id="user-favoritos" class="user-section" style="display:none;"></div>
-            <div id="user-compras" class="user-section" style="display:none;"></div>
-            <div id="user-perfil" class="user-section" style="display:none;"></div>
-            <a href="../logout.php" class="btn-secondary" style="margin-top:1.5rem;">Cerrar sesión</a>
         </div>
     </div>
-    <style>
-    .user-section { margin-top: 1.5rem; }
-    .user-section h4 { color: #44ff99; margin-bottom: 1rem; }
-    .user-section .mini-lista { display: flex; flex-wrap: wrap; gap: 1rem; }
-    .user-section .mini-card { background: #181818; border-radius: 8px; padding: 0.7rem 1rem; color: #fff; min-width: 120px; box-shadow: 0 2px 8px #0002; display: flex; flex-direction: column; align-items: center; }
-    .user-section .mini-card img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; margin-bottom: 0.5rem; }
-    .user-section .mini-card span { font-size: 0.95rem; text-align: center; }
-    </style>
-    <script>
-    function mostrarSeccionUsuario(seccion) {
-        document.querySelectorAll('.user-section').forEach(s => s.style.display = 'none');
-        if (seccion === 'favoritos') {
-            renderFavoritosUsuario();
-            document.getElementById('user-favoritos').style.display = 'block';
-        } else if (seccion === 'compras') {
-            renderComprasUsuario();
-            document.getElementById('user-compras').style.display = 'block';
-        } else if (seccion === 'perfil') {
-            renderPerfilUsuario();
-            document.getElementById('user-perfil').style.display = 'block';
-        }
-    }
-    function renderFavoritosUsuario() {
-        const cont = document.getElementById('user-favoritos');
-        cont.innerHTML = '<h4>Favoritos</h4>';
-        let favoritos = [];
-        try {
-            favoritos = JSON.parse(localStorage.getItem('favoritos_' + window.usuarioActual)) || [];
-        } catch {}
-        if (!favoritos.length) {
-            cont.innerHTML += '<p style="color:#eab308;">No tienes productos en favoritos.</p>';
-            return;
-        }
-        cont.innerHTML += '<div class="mini-lista">' + favoritos.map(f => `<div class='mini-card'><img src='${f.imagen || '../assets/images/hero_image.jpg'}'><span>${f.nombre}</span></div>`).join('') + '</div>';
-    }
-    function renderComprasUsuario() {
-        const cont = document.getElementById('user-compras');
-        cont.innerHTML = '<h4>Compras realizadas</h4>';
-        let compras = [];
-        try {
-            compras = JSON.parse(localStorage.getItem('compras_' + window.usuarioActual)) || [];
-        } catch {}
-        if (!compras.length) {
-            cont.innerHTML += '<p style="color:#eab308;">No tienes compras registradas.</p>';
-            return;
-        }
-        cont.innerHTML += '<div class="mini-lista">' + compras.map(f => `<div class='mini-card'><img src='${f.imagen || '../assets/images/hero_image.jpg'}'><span>${f.nombre}</span></div>`).join('') + '</div>';
-    }
-    function renderPerfilUsuario() {
-        const cont = document.getElementById('user-perfil');
-        let nombre = localStorage.getItem('nombre_' + window.usuarioActual) || window.usuarioActual;
-        let telefono = localStorage.getItem('telefono_' + window.usuarioActual) || '';
-        cont.innerHTML = `<h4>Mi perfil</h4>
-            <form id='perfil-form' style='display:flex;flex-direction:column;gap:1rem;'>
-                <label>Nombre:<input type='text' id='perfil-nombre' value='${nombre}' style='width:100%;padding:0.4rem;border-radius:6px;border:none;background:#232323;color:#fff;'></label>
-                <label>Teléfono:<input type='text' id='perfil-telefono' value='${telefono}' style='width:100%;padding:0.4rem;border-radius:6px;border:none;background:#232323;color:#fff;'></label>
-                <button type='submit' class='btn-primary'>Guardar cambios</button>
-            </form>
-            <div id='perfil-msg' style='margin-top:0.7rem;color:#44ff99;display:none;'>¡Perfil actualizado!</div>`;
-        document.getElementById('perfil-form').onsubmit = function(e) {
-            e.preventDefault();
-            localStorage.setItem('nombre_' + window.usuarioActual, document.getElementById('perfil-nombre').value);
-            localStorage.setItem('telefono_' + window.usuarioActual, document.getElementById('perfil-telefono').value);
-            document.getElementById('perfil-msg').style.display = 'block';
-            setTimeout(()=>{document.getElementById('perfil-msg').style.display = 'none';}, 2000);
-        };
-    }
-    </script>
     <?php endif; ?>
     <main style="max-width: 1200px; margin: 0 auto;">
         <section class="hero">
