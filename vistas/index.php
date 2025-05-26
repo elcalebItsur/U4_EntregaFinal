@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../css/home.css" />
     <link rel="stylesheet" href="../css/index.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <link rel="stylesheet" href="../css/main-header.css" />
     <style>
         body { background: #181818; color: #e0e0e0; }
         header { background: #181818; box-shadow: none; border-bottom: 1.5px solid #232323; }
@@ -65,6 +66,7 @@
         .user-section .mini-card span { font-size: 0.95rem; text-align: center; }
     </style>
     <script src="../js/index.js" defer></script>
+    <script src="../js/main-header.js" defer></script>
     <script>
     window.usuarioActual = <?php echo isset($_SESSION['usuario']) ? json_encode($_SESSION['usuario']) : 'null'; ?>;
     </script>
@@ -83,23 +85,18 @@
                 <li><a href="acerca.php" class="btn-accent">Acerca de</a></li>
                 <?php if (isset($_SESSION['usuario'])): ?>
                     <li class="user-menu">
-                        <button class="user-btn" id="user-menu-btn">
-                            <i class="fas fa-user-circle"></i>
-                            <?php echo htmlspecialchars($_SESSION['usuario']); ?>
-                            <i class="fas fa-chevron-down" style="font-size:0.8rem;"></i>
+                        <button class="user-avatar-btn" id="user-avatar-btn">
+                            <?php
+                            require_once '../datos/conexion.php';
+                            $stmt = $pdo->prepare('SELECT foto_perfil FROM usuarios WHERE id = ?');
+                            $stmt->execute([$_SESSION['usuario_id']]);
+                            $foto = $stmt->fetchColumn();
+                            if ($foto): ?>
+                                <img src="../assets/images/<?php echo htmlspecialchars($foto); ?>" alt="Perfil" />
+                            <?php else: ?>
+                                <span class="avatar-inicial"><?php echo strtoupper(substr($_SESSION['usuario'],0,1)); ?></span>
+                            <?php endif; ?>
                         </button>
-                        <div class="user-dropdown" id="user-dropdown">
-                            <div class="user-info">
-                                <?php echo htmlspecialchars($_SESSION['usuario']); ?>
-                                <small style="display:block;color:#aaa;"><?php echo htmlspecialchars($_SESSION['email']); ?></small>
-                            </div>
-                            <a href="perfil.php"><i class="fas fa-user"></i> Mi perfil</a>
-                            <a href="direcciones.php"><i class="fas fa-map-marker-alt"></i> Mis direcciones</a>
-                            <a href="pedidos.php"><i class="fas fa-box"></i> Mis pedidos</a>
-                            <a href="favorites.php"><i class="fas fa-heart"></i> Favoritos</a>
-                            <div class="divider"></div>
-                            <a href="../logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
-                        </div>
                     </li>
                 <?php else: ?>
                     <li><a href="login.php" class="btn-primary">Iniciar Sesión</a></li>
@@ -109,6 +106,31 @@
         </nav>
     </div>
 </header>
+<?php if (isset($_SESSION['usuario'])): ?>
+<div id="user-modal" class="user-modal" style="display:none;">
+    <div class="user-modal-content">
+        <button class="user-modal-close">&times;</button>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;">
+            <?php if ($foto): ?>
+                <img src="../assets/images/<?php echo htmlspecialchars($foto); ?>" alt="Perfil" style="width:80px;height:80px;border-radius:50%;object-fit:cover;box-shadow:0 2px 8px #0003;" />
+            <?php else: ?>
+                <div style="width:80px;height:80px;border-radius:50%;background:#44ff99;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#181818;font-size:2.2rem;">
+                    <?php echo strtoupper(substr($_SESSION['usuario'],0,1)); ?>
+                </div>
+            <?php endif; ?>
+            <div style="text-align:center;">
+                <div style="font-size:1.2rem;font-weight:600;"> <?php echo htmlspecialchars($_SESSION['usuario']); ?> </div>
+                <div style="color:#aaa;font-size:0.98rem;"> <?php echo htmlspecialchars($_SESSION['email']); ?> </div>
+            </div>
+        </div>
+        <ul class="user-menu-list">
+            <li><a href="perfil.php"><i class="fa fa-edit"></i> Editar perfil</a></li>
+            <li><a href="ver_perfil.php"><i class="fa fa-user"></i> Ver perfil</a></li>
+            <li><a href="../logout.php" class="btn-secondary"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a></li>
+        </ul>
+    </div>
+</div>
+<?php endif; ?>
     <?php if (isset($_SESSION['usuario'])): ?>
     <div id="user-modal" class="user-modal" style="display:none;">
         <div class="user-modal-content">

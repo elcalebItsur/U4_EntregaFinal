@@ -70,6 +70,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <li><a href="about.php">Vende</a></li>
                 <li><a href="acerca.php" class="btn-accent">Acerca de</a></li>
                 <?php if (isset($_SESSION['usuario'])): ?>
+                    <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'Vendedor'): ?>
+                        <li><a href="admin_tienda.php" class="btn-primary">Administrar Tienda</a></li>
+                    <?php endif; ?>
                     <li class="user-menu">
                         <button class="user-btn" id="user-menu-btn">
                             <i class="fas fa-user-circle"></i>
@@ -90,7 +93,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </li>
                 <?php else: ?>
-                    <li><a href="login.php" class="btn-secondary">Iniciar Sesión</a></li>
+                    <li><a href="login.php" class="btn-primary">Iniciar Sesión</a></li>
+                    <li><a href="register.php" class="btn-secondary">Registrarse</a></li>
                 <?php endif; ?>
             </ul>
         </nav>

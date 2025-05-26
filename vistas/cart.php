@@ -1,5 +1,5 @@
 <?php
-// ...existing code...
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -35,8 +35,20 @@
                     <li><a href="about.php">Vende</a></li>
                     <li><a href="acerca.php" class="btn-accent">Acerca de</a></li>
                     <?php if (isset($_SESSION['usuario'])): ?>
-                        <li><span style="color:#44ff99;">Hola, <?php echo htmlspecialchars($_SESSION['usuario']); ?>!</span></li>
-                        <li><a href="../logout.php" class="btn-secondary">Cerrar sesión</a></li>
+                        <li class="user-menu">
+                            <button class="user-avatar-btn" id="user-avatar-btn">
+                                <?php
+                                require_once '../datos/conexion.php';
+                                $stmt = $pdo->prepare('SELECT foto_perfil FROM usuarios WHERE id = ?');
+                                $stmt->execute([$_SESSION['usuario_id']]);
+                                $foto = $stmt->fetchColumn();
+                                if ($foto): ?>
+                                    <img src="../assets/images/<?php echo htmlspecialchars($foto); ?>" alt="Perfil" />
+                                <?php else: ?>
+                                    <span class="avatar-inicial"><?php echo strtoupper(substr($_SESSION['usuario'],0,1)); ?></span>
+                                <?php endif; ?>
+                            </button>
+                        </li>
                     <?php else: ?>
                         <li><a href="login.php" class="btn-primary">Iniciar Sesión</a></li>
                         <li><a href="register.php" class="btn-secondary">Registrarse</a></li>
@@ -45,6 +57,31 @@
             </nav>
         </div>
     </header>
+    <?php if (isset($_SESSION['usuario'])): ?>
+    <div id="user-modal" class="user-modal" style="display:none;">
+        <div class="user-modal-content">
+            <button class="user-modal-close">&times;</button>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;">
+                <?php if ($foto): ?>
+                    <img src="../assets/images/<?php echo htmlspecialchars($foto); ?>" alt="Perfil" style="width:80px;height:80px;border-radius:50%;object-fit:cover;box-shadow:0 2px 8px #0003;" />
+                <?php else: ?>
+                    <div style="width:80px;height:80px;border-radius:50%;background:#44ff99;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#181818;font-size:2.2rem;">
+                        <?php echo strtoupper(substr($_SESSION['usuario'],0,1)); ?>
+                    </div>
+                <?php endif; ?>
+                <div style="text-align:center;">
+                    <div style="font-size:1.2rem;font-weight:600;"> <?php echo htmlspecialchars($_SESSION['usuario']); ?> </div>
+                    <div style="color:#aaa;font-size:0.98rem;"> <?php echo htmlspecialchars($_SESSION['email']); ?> </div>
+                </div>
+            </div>
+            <ul class="user-menu-list">
+                <li><a href="perfil.php"><i class="fa fa-edit"></i> Editar perfil</a></li>
+                <li><a href="ver_perfil.php"><i class="fa fa-user"></i> Ver perfil</a></li>
+                <li><a href="../logout.php"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a></li>
+            </ul>
+        </div>
+    </div>
+    <?php endif; ?>
     <main style="max-width: 900px; margin: 0 auto;">
         <h2 style="color:#44ff99;text-align:center;margin-bottom:2rem;">Tu Carrito</h2>
         <div id="carrito-lista" class="carrito-lista"></div>

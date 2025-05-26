@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <header>
         <div class="header-content">
-            <h1 class="logo" onclick="location.href='../index.php'">Textisur</h1>
+            <h1 class="logo" onclick="location.href='../vistas/index.php'">Textisur</h1>
             <nav>
                 <ul>
                     <li><a href="../index.php">Inicio</a></li>
@@ -54,6 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <li><a href="about.php">Vende</a></li>
                     <li><a href="acerca.php" class="btn-accent">Acerca de</a></li>
                     <?php if (isset($_SESSION['usuario'])): ?>
+                        <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'Vendedor'): ?>
+                            <li><a href="admin_tienda.php" class="btn-primary">Administrar Tienda</a></li>
+                        <?php endif; ?>
                         <li class="user-menu">
                             <button class="user-btn" id="user-menu-btn">
                                 <i class="fas fa-user-circle"></i>

@@ -95,6 +95,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <!-- Mismo header que las otras páginas -->
+    <nav>
+    <ul>
+        <li><a href="index.php">Inicio</a></li>
+        <li><a href="favorites.php">Favoritos</a></li>
+        <li><a href="cart.php">Carrito</a></li>
+        <li><a href="about.php">Vende</a></li>
+        <li><a href="acerca.php" class="btn-accent">Acerca de</a></li>
+        <?php if (isset($_SESSION['usuario'])): ?>
+            <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'Vendedor'): ?>
+                <li><a href="admin_tienda.php" class="btn-primary">Administrar Tienda</a></li>
+            <?php endif; ?>
+            <li class="user-menu">
+                <button class="user-btn" id="user-menu-btn">
+                    <i class="fas fa-user-circle"></i>
+                    <?php echo htmlspecialchars($_SESSION['usuario']); ?>
+                    <i class="fas fa-chevron-down" style="font-size:0.8rem;"></i>
+                </button>
+                <div class="user-dropdown" id="user-dropdown">
+                    <div class="user-info">
+                        <?php echo htmlspecialchars($_SESSION['usuario']); ?>
+                        <small style="display:block;color:#aaa;"><?php echo htmlspecialchars($_SESSION['email']); ?></small>
+                    </div>
+                    <a href="perfil.php"><i class="fas fa-user"></i> Mi perfil</a>
+                    <a href="direcciones.php"><i class="fas fa-map-marker-alt"></i> Mis direcciones</a>
+                    <a href="pedidos.php"><i class="fas fa-box"></i> Mis pedidos</a>
+                    <a href="favorites.php"><i class="fas fa-heart"></i> Favoritos</a>
+                    <div class="divider"></div>
+                    <a href="../logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+                </div>
+            </li>
+        <?php else: ?>
+            <li><a href="login.php" class="btn-primary">Iniciar Sesión</a></li>
+            <li><a href="register.php" class="btn-secondary">Registrarse</a></li>
+        <?php endif; ?>
+    </ul>
+</nav>
     
     <main class="profile-container">
         <div class="profile-header">
