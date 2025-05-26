@@ -1,25 +1,27 @@
-<?php
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Camisa Moderna - Textisur</title>
-    <link rel="stylesheet" href="../css/main.css" />
-    <link rel="stylesheet" href="../css/product.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-    <style>
-        header { background: #181818; box-shadow: none; border-bottom: 1.5px solid #232323; }
-        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 1.2rem 2rem; }
-        .logo { font-size:2rem; color:#44ff99; font-weight:700; letter-spacing:1px; cursor:pointer; margin-right:2rem; }
-        nav ul { display: flex; gap: 1.2rem; align-items: center; list-style: none; }
-        nav ul li { display: flex; align-items: center; }
-        nav ul li a, nav ul li span { font-size: 1rem; }
-    </style>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Acerca de Textisur</title>
+	<link rel="stylesheet" href="../css/main.css" />
+	<style>
+		.acerca-main {
+			max-width: 800px;
+			margin: 3rem auto;
+			background: #1e1e1e;
+			border-radius: 14px;
+			padding: 2.5rem 2rem;
+			box-shadow: 0 4px 16px #0002;
+			animation: fadeInUp 0.7s cubic-bezier(.4,2,.3,1);
+		}
+		.acerca-main h2 { color: #44ff99; text-align: center; margin-bottom: 1.5rem; }
+		.acerca-main p { margin-bottom: 1.2rem; color: #e0e0e0; font-size: 1.1rem; }
+		.acerca-main ul { margin: 1.5rem 0 0 1.5rem; color: #eab308; }
+	</style>
 </head>
 <body>
-    <!-- Reemplazar solo la parte del header (desde <header> hasta </header>) con este código: -->
+	<!-- Reemplazar solo la parte del header (desde <header> hasta </header>) con este código: -->
 <header>
     <div class="header-content">
         <h1 class="logo" onclick="location.href='index.php'">Textisur</h1>
@@ -58,30 +60,20 @@
         </nav>
     </div>
 </header>
-    <main class="vista-producto">
-        <img src="ver_imagen.php?id=1" alt="Camisa Moderna" style="max-width:350px;border-radius:14px;box-shadow:0 4px 16px #0003;" />
-        <div class="info">
-            <h2>Camisa Polo</h2>
-            <p>Descripción del producto. Tallas disponibles: S, M, L, XL.</p>
-            <p><strong>$129.99</strong></p>
-            <button class="btn-accent">Agregar al carrito</button>
-            <button class="btn-secondary">Agregar a favoritos</button>
-        </div>
-        <div class="reseñas">
-            <h3>Reseñas</h3>
-            <div class="reseña">    
-                <p><strong>Usuario1:</strong> Me encanta esta camisa, muy cómoda.</p>
-            </div>
-            <div class="reseña">    
-                <p><strong>Usuario2:</strong> La calidad es excelente, la recomiendo.</p>
-            </div>
-            <div class="reseña">    
-                <p><strong>Usuario3:</strong> El color es diferente al de la foto.</p>
-            </div>
-        </div>
-    </main>
-    <footer>
-        <p>&copy; 2025 TEXTISUR. Todos los derechos reservados.</p>
-    </footer>
+	<main class="acerca-main">
+		<h2>Acerca de Textisur</h2>
+		<p><b>Textisur</b> es una plataforma creada para conectar tiendas de ropa locales y compradores en la región donde la industria textil es la principal actividad económica.</p>
+		<p>Nuestro propósito es impulsar la economía local, facilitar la venta de productos textiles y acercar a los consumidores a la moda regional, promoviendo el talento y la calidad de los productores locales.</p>
+		<ul>
+			<li>Conecta tiendas y compradores de manera sencilla y segura.</li>
+			<li>Ofrece un catálogo variado y actualizado de productos textiles.</li>
+			<li>Permite a los vendedores gestionar su tienda y llegar a más clientes.</li>
+			<li>Fomenta el consumo local y el desarrollo económico de la región.</li>
+		</ul>
+		<p>¡Únete a Textisur y sé parte del crecimiento de nuestra industria textil!</p>
+	</main>
+	<footer>
+		<p>&copy; 2025 TEXTISUR. Todos los derechos reservados.</p>
+	</footer>
 </body>
 </html>

@@ -1,0 +1,36 @@
+-- Script para PostgreSQL
+-- Base de datos: textisur
+
+CREATE TABLE IF NOT EXISTS usuarios (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    telefono VARCHAR(20) NOT NULL,
+    genero VARCHAR(20),
+    fecha_nacimiento DATE,
+    tipo VARCHAR(20) NOT NULL,
+    nombre_tienda VARCHAR(100),
+    rfc VARCHAR(20),
+    direccion VARCHAR(255),
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS productos (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    precio NUMERIC(10,2) NOT NULL,
+    categoria VARCHAR(50),
+    stock INT DEFAULT 0,
+    vendedor_id INT REFERENCES usuarios(id),
+    fecha_publicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS imagenes (
+    id SERIAL PRIMARY KEY,
+    producto_id INT REFERENCES productos(id) ON DELETE CASCADE,
+    nombre_archivo VARCHAR(255),
+    tipo VARCHAR(50),
+    datos BYTEA NOT NULL
+);

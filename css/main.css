@@ -10,6 +10,7 @@ body {
     color: #e0e0e0;
     line-height: 1.6;
     padding-top: 4.8rem;
+    transition: background 0.4s, box-shadow 0.4s, color 0.3s, border 0.3s;
 }
 
 header {
@@ -23,6 +24,7 @@ header {
     top: 0;
     width: 100%;
     z-index: 1000;
+    animation: fadeInDown 0.7s cubic-bezier(.4,2,.3,1);
 }
 
 .logo {
@@ -85,11 +87,13 @@ footer {
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
 }
 
 .btn-primary:hover {
     background-color: #14532d;
+    transform: scale(1.06);
+    box-shadow: 0 4px 16px #44ff9940;
 }
 
 .btn-secondary {
@@ -99,11 +103,13 @@ footer {
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
 }
 
 .btn-secondary:hover {
     background-color: #e63946;
+    transform: scale(1.06);
+    box-shadow: 0 4px 16px #44ff9940;
 }
 
 .back-button {
@@ -123,5 +129,28 @@ footer {
 
 .back-button:hover {
     background-color: #0056b3;
+}
+
+main, .auth-container, .vender-main, .vista-producto, .productos-favoritos, .carrito-lista {
+    animation: fadeInUp 0.7s cubic-bezier(.4,2,.3,1);
+}
+
+.user-modal-content {
+    animation: fadeInScale 0.3s cubic-bezier(.4,2,.3,1);
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
 }
 

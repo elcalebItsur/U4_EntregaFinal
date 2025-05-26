@@ -1,4 +1,28 @@
 <?php
+session_start();
+require_once '../datos/conexion.php';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nombre = trim($_POST['nombre'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $password = password_hash(trim($_POST['password'] ?? ''), PASSWORD_DEFAULT);
+    $telefono = trim($_POST['telefono'] ?? '');
+    $genero = trim($_POST['genero'] ?? '');
+    $fecha_nacimiento = trim($_POST['fecha_nacimiento'] ?? '');
+    $tipo = trim($_POST['tipo'] ?? '');
+    $nombre_tienda = trim($_POST['nombre_tienda'] ?? '');
+    $rfc = trim($_POST['rfc'] ?? '');
+    $direccion = trim($_POST['direccion'] ?? '');
+    $mensaje = '';
+    $stmt = $pdo->prepare('SELECT id FROM usuarios WHERE email = ?');
+    $stmt->execute([$email]);
+    if ($stmt->fetch()) {
+        $mensaje = 'El correo ya está registrado.';
+    } else {
+        $stmt = $pdo->prepare('INSERT INTO usuarios (nombre, email, password, telefono, genero, fecha_nacimiento, tipo, nombre_tienda, rfc, direccion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt->execute([$nombre, $email, $password, $telefono, $genero, $fecha_nacimiento, $tipo, $nombre_tienda, $rfc, $direccion]);
+        $mensaje = '¡Registro exitoso! Ahora puedes iniciar sesión.';
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -8,33 +32,63 @@
     <title>Registro - Textisur</title>
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/auth.css" />
-    <script>
-    function validarRegistro(e) {
-        const nombre = document.getElementById('nombre');
-        const email = document.getElementById('email');
-        const password = document.getElementById('password');
-        const telefono = document.getElementById('telefono');
-        const fecha = document.getElementById('fecha_nacimiento');
-        let mensaje = '';
-        if (!nombre.value.trim()) mensaje += 'El nombre es obligatorio.\n';
-        if (!email.value.trim() || !email.value.includes('@')) mensaje += 'Correo inválido.\n';
-        if (!password.value.trim() || password.value.length < 6) mensaje += 'La contraseña debe tener al menos 6 caracteres.\n';
-        if (!telefono.value.trim() || telefono.value.length < 10) mensaje += 'Teléfono inválido.\n';
-        if (!fecha.value) mensaje += 'La fecha de nacimiento es obligatoria.\n';
-        if (mensaje) {
-            alert(mensaje);
-            e.preventDefault();
-        }
-    }
-    </script>
+    <script src="../js/register.js" defer></script>
+    <style>
+        header { background: #181818; box-shadow: none; border-bottom: 1.5px solid #232323; }
+        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 1.2rem 2rem; }
+        .logo { font-size:2rem; color:#44ff99; font-weight:700; letter-spacing:1px; cursor:pointer; margin-right:2rem; }
+        nav ul { display: flex; gap: 1.2rem; align-items: center; list-style: none; }
+        nav ul li { display: flex; align-items: center; }
+        nav ul li a, nav ul li span { font-size: 1rem; }
+    </style>
 </head>
 <body>
-    <header>
-        <h1 class="logo" style="cursor: pointer;" onclick="location.href='../index.php'">Textisur</h1>
-    </header>
+    <!-- Reemplazar solo la parte del header (desde <header> hasta </header>) con este código: -->
+<header>
+    <div class="header-content">
+        <h1 class="logo" onclick="location.href='../index.php'">Textisur</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.php">Inicio</a></li>
+                <li><a href="cart.php">Carrito</a></li>
+                <li><a href="favorites.php">Favoritos</a></li>
+                <li><a href="about.php">Vende</a></li>
+                <li><a href="acerca.php" class="btn-accent">Acerca de</a></li>
+                <?php if (isset($_SESSION['usuario'])): ?>
+                    <li class="user-menu">
+                        <button class="user-btn" id="user-menu-btn">
+                            <i class="fas fa-user-circle"></i>
+                            <?php echo htmlspecialchars($_SESSION['usuario']); ?>
+                            <i class="fas fa-chevron-down" style="font-size:0.8rem;"></i>
+                        </button>
+                        <div class="user-dropdown" id="user-dropdown">
+                            <div class="user-info">
+                                <?php echo htmlspecialchars($_SESSION['usuario']); ?>
+                                <small style="display:block;color:#aaa;"><?php echo htmlspecialchars($_SESSION['email']); ?></small>
+                            </div>
+                            <a href="perfil.php"><i class="fas fa-user"></i> Mi perfil</a>
+                            <a href="direcciones.php"><i class="fas fa-map-marker-alt"></i> Mis direcciones</a>
+                            <a href="pedidos.php"><i class="fas fa-box"></i> Mis pedidos</a>
+                            <a href="favorites.php"><i class="fas fa-heart"></i> Favoritos</a>
+                            <div class="divider"></div>
+                            <a href="../logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+                        </div>
+                    </li>
+                <?php else: ?>
+                    <li><a href="login.php" class="btn-secondary">Iniciar Sesión</a></li>
+                <?php endif; ?>
+            </ul>
+        </nav>
+    </div>
+</header>
     <main class="auth-container">
         <h2>Crea tu cuenta</h2>
-        <form action="/SistemaComleto/register.php" method="POST" onsubmit="validarRegistro(event)">
+        <?php if (isset($mensaje)): ?>
+            <div style="background:#232323;color:#44ff99;padding:1rem;border-radius:8px;margin-bottom:1rem;text-align:center;">
+                <?php echo htmlspecialchars($mensaje); ?>
+            </div>
+        <?php endif; ?>
+        <form action="register.php" method="POST" onsubmit="return validarRegistro(event)">
             <label>Nombre completo:</label>
             <input type="text" name="nombre" id="nombre" required />
             <label>Correo electrónico:</label>
@@ -70,15 +124,9 @@
             <button class="btn-primary" type="submit">Registrarse</button>
             <p>¿Ya tienes cuenta? <a href="login.php">Inicia sesión</a></p>
         </form>
-        <script>
-        function mostrarCamposVendedor() {
-            var tipo = document.getElementById('tipo').value;
-            document.getElementById('campos-vendedor').style.display = tipo === 'Vendedor' ? 'block' : 'none';
-            document.getElementById('campos-comprador').style.display = tipo === 'Comprador' ? 'block' : 'none';
-        }
-        document.getElementById('tipo').addEventListener('change', mostrarCamposVendedor);
-        window.onload = mostrarCamposVendedor;
-        </script>
     </main>
+    <footer>
+        <p>&copy; 2025 TEXTISUR. Todos los derechos reservados.</p>
+    </footer>
 </body>
 </html>

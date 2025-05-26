@@ -1,0 +1,20 @@
+# Archivos y carpetas que no deben subirse a GitHub
+# Archivos de configuración locales
+.env
+*.env
+# Archivos temporales y de sistema
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+# Archivos de bases de datos locales
+*.sqlite
+*.db
+# Configuración de IDE/editor
+.vscode/
+.idea/
+# Archivos de caché
+node_modules/
+vendor/
+# Archivos de sistema de Windows
+Desktop.ini
