@@ -1,3 +1,19 @@
+body { background: #181818; color: #e0e0e0; }
+header { background: #181818; box-shadow: none; border-bottom: 1.5px solid #232323; }
+.header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 1.2rem 2rem; }
+.logo { font-size:2rem; color:#44ff99; font-weight:700; letter-spacing:1px; cursor:pointer; margin-right:2rem; }
+nav ul { display: flex; gap: 1.2rem; align-items: center; list-style: none; }
+nav ul li { display: flex; align-items: center; }
+nav ul li a, nav ul li span { font-size: 1rem; }
+.hero { background: linear-gradient(135deg, #181818 60%, #232323 100%); border-radius: 18px; margin-bottom: 2.5rem; display: flex; align-items: center; justify-content: space-between; padding: 2.5rem 2rem; gap:2rem; }
+        .hero-text { flex:1; }
+        .hero h2 { font-size: 2.5rem; color: #44ff99; margin-bottom:1rem; }
+        .hero p { color: #b0b0b0; margin-bottom:1.5rem; }
+        .hero-img { flex:1; text-align:right; }
+        .hero-img img { max-width: 350px; border-radius: 16px; box-shadow: 0 8px 32px #0004; }
+.categorias .grid { margin-top:1.5rem; }
+.categorias .grid .card { cursor: pointer; transition: box-shadow 0.2s, border 0.2s; border: 1.5px solid #232323; background:#232323; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:120px; font-size:1.2rem; font-weight:500; color:#44ff99; }
+.categorias .grid .card:hover { box-shadow: 0 4px 16px #44ff9922; border: 1.5px solid #44ff99; background: #181818; }
 .productos-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -81,4 +97,60 @@
 }
 .producto-card button.favorito:hover {
     background: #facc15;
+}
+.vender { background: #1e1e1e; border-radius: 12px; margin-top: 2.5rem; padding: 2rem; text-align: center; }
+.vender h2 { color: #44ff99; }
+.vender a { margin-top: 1rem; }
+footer { margin-top: 3rem; background: #232323; border-radius: 10px 10px 0 0; }
+@media (max-width: 900px) {
+            .hero { flex-direction: column; text-align:center; }
+            .hero-img { text-align:center; margin-top:1.5rem; }
+        }
+        @media (max-width: 700px) {
+            .header-content { flex-direction: column; gap:1rem; padding:1rem; }
+            .hero h2 { font-size: 1.5rem; }
+        }
+.user-modal {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 2000;
+    animation: fadeIn 0.2s;
+}
+.user-modal-content {
+    background: #232323; color: #fff; border-radius: 14px; padding: 2rem 2.5rem; min-width: 320px; box-shadow: 0 8px 32px #0005; position: relative;
+    display: flex; flex-direction: column; align-items: center;
+}
+.user-modal-close {
+    position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: #ff6b6b; font-size: 2rem; cursor: pointer;
+}
+.user-menu-list { list-style: none; padding: 0; margin: 1.5rem 0 0 0; width: 100%; }
+.user-menu-list li { margin-bottom: 1rem; }
+.user-menu-list a { color: #44ff99; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 0.7rem; transition: color 0.2s; }
+.user-menu-list a:hover { color: #eab308; }
+.user-section { margin-top: 1.5rem; }
+.user-section h4 { color: #44ff99; margin-bottom: 1rem; }
+.user-section .mini-lista { display: flex; flex-wrap: wrap; gap: 1rem; }
+.user-section .mini-card { background: #181818; border-radius: 8px; padding: 0.7rem 1rem; color: #fff; min-width: 120px; box-shadow: 0 2px 8px #0002; display: flex; flex-direction: column; align-items: center; }
+.user-section .mini-card img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; margin-bottom: 0.5rem; }
+.user-section .mini-card span { font-size: 0.95rem; text-align: center; }
+.user-avatar-btn img,
+.user-modal-content img[alt="Perfil"] {
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 8px #0003;
+}
+
+.user-modal-content .avatar-inicial,
+.user-avatar-btn .avatar-inicial {
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 50%;
+    background: #44ff99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #181818;
+    font-size: 1.7rem;
 }
