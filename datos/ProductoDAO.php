@@ -49,4 +49,14 @@ class ProductoDAO {
         $stmt = $pdo->query('SELECT p.*, u.nombre_tienda FROM productos p LEFT JOIN usuarios u ON p.vendedor_id = u.id ORDER BY RANDOM() LIMIT ' . intval($limite));
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public static function agregarCompleto($nombre, $descripcion, $precio, $categoria, $stock, $imagen, $vendedor_id) {
+        global $pdo;
+        $stmt = $pdo->prepare('INSERT INTO productos (nombre, descripcion, precio, categoria, stock, imagen, vendedor_id) VALUES (?, ?, ?, ?, ?, ?, ?)');
+        return $stmt->execute([$nombre, $descripcion, $precio, $categoria, $stock, $imagen, $vendedor_id]);
+    }
+    public static function actualizarCompleto($id, $nombre, $descripcion, $precio, $categoria, $stock, $imagen, $vendedor_id) {
+        global $pdo;
+        $stmt = $pdo->prepare('UPDATE productos SET nombre=?, descripcion=?, precio=?, categoria=?, stock=?, imagen=? WHERE id=? AND vendedor_id=?');
+        return $stmt->execute([$nombre, $descripcion, $precio, $categoria, $stock, $imagen, $id, $vendedor_id]);
+    }
 }

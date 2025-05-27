@@ -33,4 +33,10 @@ class VentaDAO {
         $stmt->execute([$vendedor_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public static function obtenerDetallesVenta($venta_id) {
+        global $pdo;
+        $stmt = $pdo->prepare('SELECT * FROM detalle_venta WHERE venta_id = ?');
+        $stmt->execute([$venta_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

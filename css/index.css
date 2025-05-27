@@ -31,7 +31,10 @@ nav ul li a, nav ul li span { font-size: 1rem; }
     transition: box-shadow 0.3s cubic-bezier(.4,2,.3,1), transform 0.25s cubic-bezier(.4,2,.3,1);
     border: 1.5px solid #333;
     color: #fff;
-    min-height: 370px;
+    min-height: 470px; /* Aumenta el alto mínimo */
+    min-width: 320px;  /* Más responsivo */
+    max-width: 380px;  /* Un poco más angosto */
+    margin: 0 auto;
 }
 .producto-card:hover {
     box-shadow: 0 12px 32px #44ff9940, 0 2px 8px #0003;
@@ -40,8 +43,8 @@ nav ul li a, nav ul li span { font-size: 1rem; }
     z-index: 2;
 }
 .producto-card img {
-    width: 160px;
-    height: 160px;
+    width: 200px;
+    height: 200px;
     object-fit: cover;
     border-radius: 12px;
     margin-bottom: 1rem;
@@ -68,10 +71,21 @@ nav ul li a, nav ul li span { font-size: 1rem; }
 }
 .producto-card .acciones {
     display: flex;
-    gap: 0.5rem;
+    flex-direction: row;
+    gap: 0.7rem;
     width: 100%;
     justify-content: center;
     margin-top: 0.7rem;
+}
+.producto-card .acciones button {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 120px; /* Limita el ancho máximo */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.95rem; /* Más pequeño */
+    padding: 0.4rem 0.5rem; /* Menos padding */
 }
 .producto-card button {
     border: none;
@@ -192,4 +206,21 @@ footer { margin-top: 3rem; background: #232323; border-radius: 10px 10px 0 0; }
     font-weight: bold;
     color: #181818;
     font-size: 1.7rem;
+}
+@media (max-width: 600px) {
+    .producto-card {
+        min-width: 90vw;
+        max-width: 98vw;
+        padding: 1rem 0.5rem;
+    }
+    .producto-card .acciones {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .producto-card .acciones button {
+        max-width: 100%;
+        width: 100%;
+        font-size: 0.93rem;
+        padding: 0.4rem 0.2rem;
+    }
 }

@@ -84,6 +84,12 @@ if ($usuario['tipo'] === 'Vendedor') {
                 <li><a href="about.php">Vende</a></li>
                 <li><a href="acerca.php" class="btn-accent">Acerca de</a></li>
                 <?php if (isset($_SESSION['usuario'])): ?>
+                    <?php if ($usuario['tipo'] === 'Vendedor'): ?>
+                        <li><a href="admin_tienda.php" class="btn-primary">Administrar Tienda</a></li>
+                        <li><a href="mis_ventas.php" class="btn-primary">Mis Ventas</a></li>
+                    <?php elseif ($usuario['tipo'] === 'Comprador'): ?>
+                        <li><a href="mis_compras.php" class="btn-primary">Mis Compras</a></li>
+                    <?php endif; ?>
                     <li class="user-menu">
                         <button class="user-avatar-btn" id="user-avatar-btn">
                             <?php
