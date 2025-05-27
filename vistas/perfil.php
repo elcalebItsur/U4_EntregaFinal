@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../datos/conexion.php';
+require_once '../datos/UsuarioDAO.php';
 if (!isset($_SESSION['usuario'])) {
     header('Location: login.php');
     exit();
@@ -8,9 +8,7 @@ if (!isset($_SESSION['usuario'])) {
 $mensaje = '';
 $usuario_id = $_SESSION['usuario_id'];
 // Obtener datos actuales del usuario
-$stmt = $pdo->prepare('SELECT * FROM usuarios WHERE id = ?');
-$stmt->execute([$usuario_id]);
-$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+$usuario = UsuarioDAO::obtenerPorId($usuario_id);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = trim($_POST['nombre'] ?? '');
     $email = trim($_POST['email'] ?? '');
@@ -31,15 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
-    $stmt = $pdo->prepare('UPDATE usuarios SET nombre = ?, email = ?, telefono = ?, fecha_nacimiento = ?, foto_perfil = ? WHERE id = ?');
-    $stmt->execute([$nombre, $email, $telefono, $fecha_nacimiento, $foto_perfil, $usuario_id]);
+    UsuarioDAO::actualizarPerfil($usuario_id, $nombre, $email, $telefono, $fecha_nacimiento, $foto_perfil);
     $_SESSION['usuario'] = $nombre;
     $_SESSION['email'] = $email;
     $mensaje = 'Perfil actualizado correctamente';
     // Refrescar datos
-    $stmt = $pdo->prepare('SELECT * FROM usuarios WHERE id = ?');
-    $stmt->execute([$usuario_id]);
-    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+    $usuario = UsuarioDAO::obtenerPorId($usuario_id);
 }
 ?>
 

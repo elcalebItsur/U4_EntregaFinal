@@ -1,7 +1,7 @@
 <?php
 // Página de administración de tienda para vendedores
 session_start();
-require_once '../datos/conexion.php';
+require_once '../datos/ProductoDAO.php';
 if (!isset($_SESSION['usuario']) || $_SESSION['tipo'] !== 'Vendedor') {
     header('Location: ../index.php');
     exit();
@@ -11,14 +11,11 @@ $mensaje = '';
 // Eliminar producto
 if (isset($_GET['eliminar'])) {
     $id = intval($_GET['eliminar']);
-    $stmt = $pdo->prepare('DELETE FROM productos WHERE id = ? AND vendedor_id = ?');
-    $stmt->execute([$id, $vendedor_id]);
+    ProductoDAO::eliminar($id, $vendedor_id);
     $mensaje = 'Producto eliminado correctamente.';
 }
 // Obtener productos del vendedor
-$stmt = $pdo->prepare('SELECT * FROM productos WHERE vendedor_id = ?');
-$stmt->execute([$vendedor_id]);
-$productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$productos = ProductoDAO::obtenerPorVendedor($vendedor_id);
 ?>
 <!DOCTYPE html>
 <html lang="es">

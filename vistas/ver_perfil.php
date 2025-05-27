@@ -1,19 +1,16 @@
 <?php
 session_start();
-require_once '../datos/conexion.php';
+require_once '../datos/UsuarioDAO.php';
+require_once '../datos/ProductoDAO.php';
 if (!isset($_SESSION['usuario'])) {
     header('Location: login.php');
     exit();
 }
 $usuario_id = $_SESSION['usuario_id'];
-$stmt = $pdo->prepare('SELECT * FROM usuarios WHERE id = ?');
-$stmt->execute([$usuario_id]);
-$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+$usuario = UsuarioDAO::obtenerPorId($usuario_id);
 $productos = [];
 if ($usuario['tipo'] === 'Vendedor') {
-    $stmt = $pdo->prepare('SELECT * FROM productos WHERE vendedor_id = ?');
-    $stmt->execute([$usuario_id]);
-    $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $productos = ProductoDAO::obtenerPorVendedor($usuario_id);
 }
 ?>
 <!DOCTYPE html>
@@ -26,8 +23,44 @@ if ($usuario['tipo'] === 'Vendedor') {
     <style>
         .perfil-main { max-width: 900px; margin: 2.5rem auto; background: #1e1e1e; border-radius: 14px; padding: 2.5rem 2rem; box-shadow: 0 4px 16px #0002; animation: fadeInUp 0.7s cubic-bezier(.4,2,.3,1); }
         .perfil-header { display: flex; align-items: center; gap: 2rem; margin-bottom: 2.5rem; }
-        .perfil-avatar { width: 100px; height: 100px; border-radius: 50%; background: #44ff99; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: #181818; font-weight: bold; box-shadow: 0 2px 8px #0003; }
-        .perfil-avatar img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; }
+        .perfil-avatar {
+            width: 70px;
+            height: 70px;
+            max-width: 70px;
+            max-height: 70px;
+            min-width: 70px;
+            min-height: 70px;
+            border-radius: 50%;
+            background: #44ff99;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #181818;
+            font-weight: bold;
+            box-shadow: 0 2px 8px #0003;
+        }
+        .perfil-avatar img {
+            width: 70px;
+            height: 70px;
+            max-width: 70px;
+            max-height: 70px;
+            min-width: 70px;
+            min-height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        @media (max-width: 600px) {
+            .perfil-header { flex-direction: column; gap: 1rem; }
+            .perfil-avatar, .perfil-avatar img {
+                width: 55px;
+                height: 55px;
+                max-width: 55px;
+                max-height: 55px;
+                min-width: 55px;
+                min-height: 55px;
+            }
+        }
         .perfil-info { flex:1; }
         .perfil-info h2 { color: #44ff99; margin-bottom: 0.5rem; }
         .perfil-info p { color: #aaa; margin-bottom: 0.2rem; }

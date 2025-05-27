@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../datos/conexion.php';
+require_once '../datos/UsuarioDAO.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = trim($_POST['nombre'] ?? '');
     $email = trim($_POST['email'] ?? '');
@@ -28,13 +28,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
-    $stmt = $pdo->prepare('SELECT id FROM usuarios WHERE email = ?');
-    $stmt->execute([$email]);
-    if ($stmt->fetch()) {
+    // Verificar si el correo ya existe
+    $existe = UsuarioDAO::obtenerPorId($email); // Cambia esto si tienes un método para buscar por email
+    if ($existe) {
         $mensaje = 'El correo ya está registrado.';
     } else {
-        $stmt = $pdo->prepare('INSERT INTO usuarios (nombre, email, password, telefono, genero, fecha_nacimiento, tipo, nombre_tienda, rfc, direccion, foto_perfil) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-        $stmt->execute([$nombre, $email, $password, $telefono, $genero, $fecha_nacimiento, $tipo, $nombre_tienda, $rfc, $direccion, $foto_perfil]);
+        UsuarioDAO::registrar([
+            'nombre' => $nombre,
+            'email' => $email,
+            'password' => $password,
+            'telefono' => $telefono,
+            'genero' => $genero,
+            'fecha_nacimiento' => $fecha_nacimiento,
+            'tipo' => $tipo,
+            'nombre_tienda' => $nombre_tienda,
+            'rfc' => $rfc,
+            'direccion' => $direccion,
+            'foto_perfil' => $foto_perfil
+        ]);
         $mensaje = '¡Registro exitoso! Ahora puedes iniciar sesión.';
     }
 }
@@ -61,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Reemplazar solo la parte del header (desde <header> hasta </header>) con este código: -->
 <header>
     <div class="header-content">
-        <h1 class="logo" onclick="location.href='../index.php'">Textisur</h1>
+        <h1 class="logo" onclick="location.href='../vistas/index.php'">Textisur</h1>
         <nav>
             <ul>
                 <li><a href="../index.php">Inicio</a></li>

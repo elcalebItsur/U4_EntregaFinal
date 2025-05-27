@@ -1,5 +1,5 @@
 <?php
-require_once '../datos/conexion.php';
+require_once '../datos/ProductoDAO.php';
 session_start();
 
 $esEdicion = false;
@@ -15,9 +15,7 @@ $producto = [
 if (isset($_GET['editar'])) {
     $esEdicion = true;
     $id = intval($_GET['editar']);
-    $stmt = $pdo->prepare('SELECT * FROM productos WHERE id = ? AND vendedor_id = ?');
-    $stmt->execute([$id, $_SESSION['usuario_id']]);
-    $producto = $stmt->fetch(PDO::FETCH_ASSOC);
+    $producto = ProductoDAO::obtenerPorId($id, $_SESSION['usuario_id']);
     if (!$producto) {
         header('Location: admin_tienda.php');
         exit();
@@ -31,8 +29,7 @@ if (isset($_POST['guardar']) && $esEdicion) {
     $categoria = $_POST['categoria'];
     $stock = $_POST['stock'];
     $id = $_POST['id'];
-    $stmt = $pdo->prepare('UPDATE productos SET nombre=?, precio=?, categoria=?, stock=? WHERE id=? AND vendedor_id=?');
-    $stmt->execute([$nombre, $precio, $categoria, $stock, $id, $_SESSION['usuario_id']]);
+    ProductoDAO::actualizar($id, $nombre, $precio, $categoria, $stock, $_SESSION['usuario_id']);
     header('Location: admin_tienda.php');
     exit();
 }
@@ -43,8 +40,7 @@ if (isset($_POST['agregar']) && !$esEdicion) {
     $precio = $_POST['precio'];
     $categoria = $_POST['categoria'];
     $stock = $_POST['stock'];
-    $stmt = $pdo->prepare('INSERT INTO productos (nombre, precio, categoria, stock, vendedor_id) VALUES (?, ?, ?, ?, ?)');
-    $stmt->execute([$nombre, $precio, $categoria, $stock, $_SESSION['usuario_id']]);
+    ProductoDAO::agregar($nombre, $precio, $categoria, $stock, $_SESSION['usuario_id']);
     header('Location: admin_tienda.php');
     exit();
 }
