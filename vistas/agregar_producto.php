@@ -1,64 +1,77 @@
 <?php
-// Vista para agregar productos y subir imágenes
-session_start();
 require_once '../datos/conexion.php';
+session_start();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nombre = trim($_POST['nombre'] ?? '');
-    $descripcion = trim($_POST['descripcion'] ?? '');
-    $precio = floatval($_POST['precio'] ?? 0);
-    $categoria = trim($_POST['categoria'] ?? '');
-    $stock = intval($_POST['stock'] ?? 0);
-    $vendedor_id = $_SESSION['usuario_id'] ?? null;
-    $imagen = $_FILES['imagen'] ?? null;
-    $mensaje = '';
+$esEdicion = false;
+$mensaje = '';
+$producto = [
+    'nombre' => '',
+    'precio' => '',
+    'categoria' => '',
+    'stock' => ''
+];
 
-    if ($nombre && $precio && $vendedor_id && $imagen && $imagen['tmp_name']) {
-        try {
-            $pdo->beginTransaction();
-            // Forzar conversión a UTF-8 solo si no está ya en UTF-8
-            function to_utf8($str) {
-                return mb_convert_encoding($str, 'UTF-8', mb_detect_encoding($str, 'UTF-8, ISO-8859-1, ISO-8859-15', true));
-            }
-            $nombre = to_utf8($nombre);
-            $descripcion = to_utf8($descripcion);
-            $categoria = to_utf8($categoria);
-            // Guardar la imagen en assets/images y solo guardar el nombre en la base
-            $imgName = basename($imagen['name']);
-            $destino = __DIR__ . '/../assets/images/' . $imgName;
-            if (!move_uploaded_file($imagen['tmp_name'], $destino)) {
-                throw new Exception('No se pudo guardar la imagen en la carpeta de imágenes.');
-            }
-            $stmt = $pdo->prepare("INSERT INTO productos (nombre, descripcion, precio, categoria, stock, vendedor_id, imagen) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$nombre, $descripcion, $precio, $categoria, $stock, $vendedor_id, $imgName]);
-            $pdo->commit();
-            $mensaje = 'Producto registrado correctamente.';
-        } catch (Exception $e) {
-            $pdo->rollBack();
-            $mensaje = 'Error al registrar producto: ' . $e->getMessage();
-        }
-    } else {
-        $mensaje = 'Faltan datos obligatorios.';
+// Si viene por edición, carga los datos
+if (isset($_GET['editar'])) {
+    $esEdicion = true;
+    $id = intval($_GET['editar']);
+    $stmt = $pdo->prepare('SELECT * FROM productos WHERE id = ? AND vendedor_id = ?');
+    $stmt->execute([$id, $_SESSION['usuario_id']]);
+    $producto = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$producto) {
+        header('Location: admin_tienda.php');
+        exit();
     }
+}
+
+// Guardar cambios (editar)
+if (isset($_POST['guardar']) && $esEdicion) {
+    $nombre = $_POST['nombre'];
+    $precio = $_POST['precio'];
+    $categoria = $_POST['categoria'];
+    $stock = $_POST['stock'];
+    $id = $_POST['id'];
+    $stmt = $pdo->prepare('UPDATE productos SET nombre=?, precio=?, categoria=?, stock=? WHERE id=? AND vendedor_id=?');
+    $stmt->execute([$nombre, $precio, $categoria, $stock, $id, $_SESSION['usuario_id']]);
+    header('Location: admin_tienda.php');
+    exit();
+}
+
+// Agregar nuevo producto
+if (isset($_POST['agregar']) && !$esEdicion) {
+    $nombre = $_POST['nombre'];
+    $precio = $_POST['precio'];
+    $categoria = $_POST['categoria'];
+    $stock = $_POST['stock'];
+    $stmt = $pdo->prepare('INSERT INTO productos (nombre, precio, categoria, stock, vendedor_id) VALUES (?, ?, ?, ?, ?)');
+    $stmt->execute([$nombre, $precio, $categoria, $stock, $_SESSION['usuario_id']]);
+    header('Location: admin_tienda.php');
+    exit();
 }
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
-    <title>Agregar Producto</title>
+    <title><?php echo $esEdicion ? 'Editar Producto' : 'Agregar Producto'; ?></title>
+    <link rel="stylesheet" href="../css/main.css" />
 </head>
 <body>
-    <h2>Agregar Producto</h2>
-    <?php if (!empty($mensaje)) echo '<p>' . htmlspecialchars($mensaje) . '</p>'; ?>
-    <form method="POST" enctype="multipart/form-data">
-        <label>Nombre: <input type="text" name="nombre" required></label><br>
-        <label>Descripción: <textarea name="descripcion"></textarea></label><br>
-        <label>Precio: <input type="number" step="0.01" name="precio" required></label><br>
-        <label>Categoría: <input type="text" name="categoria"></label><br>
-        <label>Stock: <input type="number" name="stock" value="0"></label><br>
-        <label>Imagen: <input type="file" name="imagen" accept="image/*" required></label><br>
-        <button type="submit">Guardar Producto</button>
-    </form>
+    <main style="max-width:500px;margin:2rem auto;background:#1e1e1e;padding:2rem;border-radius:12px;">
+        <h2 style="color:#44ff99;"><?php echo $esEdicion ? 'Editar Producto' : 'Agregar Producto'; ?></h2>
+        <form method="post">
+            <input type="text" name="nombre" value="<?php echo htmlspecialchars($producto['nombre']); ?>" placeholder="Nombre" required><br><br>
+            <input type="number" step="0.01" name="precio" value="<?php echo htmlspecialchars($producto['precio']); ?>" placeholder="Precio" required><br><br>
+            <input type="text" name="categoria" value="<?php echo htmlspecialchars($producto['categoria']); ?>" placeholder="Categoría" required><br><br>
+            <input type="number" name="stock" value="<?php echo htmlspecialchars($producto['stock']); ?>" placeholder="Stock" required><br><br>
+            <?php if ($esEdicion): ?>
+                <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
+                <button type="submit" name="guardar" class="btn-edit">Guardar Cambios</button>
+                <a href="admin_tienda.php" class="btn-danger" style="margin-left:1rem;">Regresar</a>
+            <?php else: ?>
+                <button type="submit" name="agregar" class="btn-add">Agregar Producto</button>
+            <?php endif; ?>
+        </form>
+    </main>
 </body>
 </html>

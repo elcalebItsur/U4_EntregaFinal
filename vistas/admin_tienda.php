@@ -42,10 +42,10 @@ $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <header>
         <div class="header-content">
-            <h1 class="logo" onclick="location.href='../index.php'">Textisur</h1>
+            <h1 class="logo" onclick="location.href='../vistas/index.php'">Textisur</h1>
             <nav>
                 <ul>
-                    <li><a href="../index.php">Inicio</a></li>
+                    <li><a href="../vistas/index.php">Inicio</a></li>
                     <li><a href="perfil.php">Mi perfil</a></li>
                     <li><a href="../logout.php" class="btn-secondary">Cerrar sesión</a></li>
                 </ul>
