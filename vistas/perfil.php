@@ -42,151 +42,130 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="es">
 <head>
     <!-- Mismo head que las otras páginas -->
-    <style>
-        .profile-container {
-            max-width: 800px;
-            margin: 2rem auto;
-            background: #1e1e1e;
-            border-radius: 14px;
-            padding: 2rem;
-            box-shadow: 0 4px 16px #0002;
-            animation: fadeInUp 0.7s cubic-bezier(.4,2,.3,1);
-        }
-        
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .profile-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: #44ff99;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            color: #181818;
-            font-weight: bold;
-        }
-        
-        .profile-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-        
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        
-        .form-group.full-width {
-            grid-column: span 2;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil</title>
+    <link rel="stylesheet" href="../css/perfil.css">
+    <link rel="stylesheet" href="../css/main-header.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
-    <!-- Mismo header que las otras páginas -->
-    <nav>
-    <ul>
-        <li><a href="index.php">Inicio</a></li>
-        <li><a href="favorites.php">Favoritos</a></li>
-        <li><a href="cart.php">Carrito</a></li>
-        <li><a href="about.php">Vende</a></li>
-        <li><a href="acerca.php" class="btn-accent">Acerca de</a></li>
-        <?php if (isset($_SESSION['usuario'])): ?>
-            <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'Vendedor'): ?>
-                <li><a href="admin_tienda.php" class="btn-primary">Administrar Tienda</a></li>
-            <?php endif; ?>
-            <li class="user-menu">
-                <button class="user-btn" id="user-menu-btn">
-                    <i class="fas fa-user-circle"></i>
-                    <?php echo htmlspecialchars($_SESSION['usuario']); ?>
-                    <i class="fas fa-chevron-down" style="font-size:0.8rem;"></i>
-                </button>
-                <div class="user-dropdown" id="user-dropdown">
-                    <div class="user-info">
+    <nav class="main-navbar">
+        <ul class="nav-list">
+            <li><a href="index.php" class="nav-btn"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="favorites.php" class="nav-btn"><i class="fas fa-heart"></i> Favoritos</a></li>
+            <li><a href="cart.php" class="nav-btn"><i class="fas fa-shopping-cart"></i> Carrito</a></li>
+            <li><a href="about.php" class="nav-btn"><i class="fas fa-store"></i> Vende</a></li>
+            <li><a href="acerca.php" class="nav-btn btn-accent"><i class="fas fa-info-circle"></i> Acerca de</a></li>
+            <?php if (isset($_SESSION['usuario'])): ?>
+                <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'Vendedor'): ?>
+                    <li><a href="admin_tienda.php" class="nav-btn btn-primary"><i class="fas fa-cogs"></i> Administrar Tienda</a></li>
+                <?php endif; ?>
+                <li class="user-menu">
+                    <button class="user-btn" id="user-menu-btn">
+                        <span class="user-avatar-nav">
+                            <?php if (!empty($usuario['foto_perfil'])): ?>
+                                <img src="../assets/images/<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" />
+                            <?php else: ?>
+                                <?php echo strtoupper(substr($_SESSION['usuario'], 0, 1)); ?>
+                            <?php endif; ?>
+                        </span>
                         <?php echo htmlspecialchars($_SESSION['usuario']); ?>
-                        <small style="display:block;color:#aaa;"><?php echo htmlspecialchars($_SESSION['email']); ?></small>
+                        <i class="fas fa-chevron-down" style="font-size:0.8rem;"></i>
+                    </button>
+                    <div class="user-dropdown" id="user-dropdown">
+                        <div class="user-info">
+                            <span class="user-avatar-dropdown">
+                                <?php if (!empty($usuario['foto_perfil'])): ?>
+                                    <img src="../assets/images/<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Avatar" />
+                                <?php else: ?>
+                                    <?php echo strtoupper(substr($_SESSION['usuario'], 0, 1)); ?>
+                                <?php endif; ?>
+                            </span>
+                            <span class="user-name"><?php echo htmlspecialchars($_SESSION['usuario']); ?></span>
+                            <small class="user-email"><?php echo htmlspecialchars($_SESSION['email']); ?></small>
+                        </div>
+                        <a href="perfil.php"><i class="fas fa-user"></i> Mi perfil</a>
+                        <a href="direcciones.php"><i class="fas fa-map-marker-alt"></i> Mis direcciones</a>
+                        <a href="pedidos.php"><i class="fas fa-box"></i> Mis pedidos</a>
+                        <a href="favorites.php"><i class="fas fa-heart"></i> Favoritos</a>
+                        <div class="divider"></div>
+                        <a href="../logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
                     </div>
-                    <a href="perfil.php"><i class="fas fa-user"></i> Mi perfil</a>
-                    <a href="direcciones.php"><i class="fas fa-map-marker-alt"></i> Mis direcciones</a>
-                    <a href="pedidos.php"><i class="fas fa-box"></i> Mis pedidos</a>
-                    <a href="favorites.php"><i class="fas fa-heart"></i> Favoritos</a>
-                    <div class="divider"></div>
-                    <a href="../logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
-                </div>
-            </li>
-        <?php else: ?>
-            <li><a href="login.php" class="btn-primary">Iniciar Sesión</a></li>
-            <li><a href="register.php" class="btn-secondary">Registrarse</a></li>
-        <?php endif; ?>
-    </ul>
-</nav>
-    
+                </li>
+            <?php else: ?>
+                <li><a href="login.php" class="btn-primary">Iniciar Sesión</a></li>
+                <li><a href="register.php" class="btn-secondary">Registrarse</a></li>
+            <?php endif; ?>
+        </ul>
+    </nav>
     <main class="profile-container">
         <div class="profile-header">
             <div class="profile-avatar">
                 <?php if (!empty($usuario['foto_perfil'])): ?>
-                    <img src="../assets/images/<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Foto de perfil" style="width:100px;height:100px;border-radius:50%;object-fit:cover;" />
+                    <img src="../assets/images/<?php echo htmlspecialchars($usuario['foto_perfil']); ?>" alt="Foto de perfil" />
                 <?php else: ?>
                     <?php echo strtoupper(substr($_SESSION['usuario'], 0, 1)); ?>
                 <?php endif; ?>
             </div>
             <div>
-                <h2 style="color:#44ff99;">Mi Perfil</h2>
-                <p><?php echo htmlspecialchars($_SESSION['email']); ?></p>
-                <p style="color:#aaa;"><?php echo htmlspecialchars($_SESSION['tipo']); ?></p>
+                <h2 class="profile-title">Mi Perfil</h2>
+                <p class="profile-email"><?php echo htmlspecialchars($_SESSION['email']); ?></p>
+                <p class="profile-type"><?php echo htmlspecialchars($_SESSION['tipo']); ?></p>
             </div>
         </div>
-        
         <?php if (isset($mensaje)): ?>
-            <div style="background:#232323;color:#44ff99;padding:1rem;border-radius:8px;margin-bottom:1.5rem;">
+            <div class="profile-message">
                 <?php echo htmlspecialchars($mensaje); ?>
             </div>
         <?php endif; ?>
-        
         <form method="POST" class="profile-form" enctype="multipart/form-data">
             <div class="form-group">
                 <label>Nombre completo</label>
                 <input type="text" name="nombre" value="<?php echo htmlspecialchars($_SESSION['usuario']); ?>" required>
             </div>
-            
             <div class="form-group">
                 <label>Correo electrónico</label>
                 <input type="email" name="email" value="<?php echo htmlspecialchars($_SESSION['email']); ?>" required>
             </div>
-            
             <div class="form-group">
                 <label>Teléfono</label>
-                <input type="tel" name="telefono">
+                <input type="tel" name="telefono" value="<?php echo htmlspecialchars($usuario['telefono'] ?? ''); ?>">
             </div>
-            
             <div class="form-group">
                 <label>Fecha de nacimiento</label>
-                <input type="date" name="fecha_nacimiento">
+                <input type="date" name="fecha_nacimiento" value="<?php echo htmlspecialchars($usuario['fecha_nacimiento'] ?? ''); ?>">
             </div>
-            
             <div class="form-group full-width">
                 <label>Acerca de mí</label>
-                <textarea name="bio" rows="3"></textarea>
+                <textarea name="bio" rows="3" disabled style="resize:vertical;">(Próximamente)</textarea>
             </div>
-            
             <div class="form-group full-width">
                 <label>Cambiar foto de perfil</label>
                 <input type="file" name="foto_perfil" accept="image/*" />
             </div>
-            
-            <div class="form-group full-width" style="margin-top:1rem;">
+            <div class="form-group full-width profile-actions">
                 <button type="submit" class="btn-primary">Guardar cambios</button>
-                <a href="cambiar-password.php" class="btn-secondary" style="margin-left:1rem;">Cambiar contraseña</a>
+                <a href="cambiar-password.php" class="btn-secondary">Cambiar contraseña</a>
             </div>
         </form>
     </main>
-    
+    <script>
+    // Dropdown user menu
+    document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('user-menu-btn');
+        const dropdown = document.getElementById('user-dropdown');
+        if(btn && dropdown) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dropdown.classList.toggle('show');
+            });
+            document.addEventListener('click', function() {
+                dropdown.classList.remove('show');
+            });
+        }
+    });
+    </script>
     <!-- Mismo footer que las otras páginas -->
 </body>
 </html>

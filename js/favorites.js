@@ -106,4 +106,126 @@ function eliminarFavorito(id, card) {
     });
 }
 
+function agregarAFavoritos(id) {
+  if (!window.usuarioActual) {
+    alert('Debes iniciar sesión para agregar a favoritos.');
+    window.location.href = 'login.php';
+    return;
+  }
+  fetch('favorites.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: 'productoId=' + encodeURIComponent(id)
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      mostrarNotificacion('Producto agregado a favoritos');
+      if (window.actualizarFavoritosVista) window.actualizarFavoritosVista();
+    } else {
+      alert(data.error || 'No se pudo agregar a favoritos.');
+    }
+  })
+  .catch(() => alert('Error de conexión.'));
+}
+
+function eliminarDeFavoritos(id) {
+  fetch('favorites.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: 'productoId=' + encodeURIComponent(id) + '&eliminar=1'
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      mostrarNotificacion('Producto eliminado de favoritos');
+      if (window.actualizarFavoritosVista) window.actualizarFavoritosVista();
+    } else {
+      alert(data.error || 'No se pudo eliminar de favoritos.');
+    }
+  })
+  .catch(() => alert('Error de conexión.'));
+}
+
+function mostrarNotificacion(msg) {
+  let notif = document.getElementById('notif-fav');
+  if (!notif) {
+    notif = document.createElement('div');
+    notif.id = 'notif-fav';
+    notif.style.position = 'fixed';
+    notif.style.top = '30px';
+    notif.style.right = '30px';
+    notif.style.background = '#44ff99';
+    notif.style.color = '#181818';
+    notif.style.padding = '1rem 2rem';
+    notif.style.borderRadius = '10px';
+    notif.style.fontWeight = 'bold';
+    notif.style.boxShadow = '0 4px 16px #0005';
+    notif.style.zIndex = 9999;
+    notif.style.opacity = 0;
+    notif.style.transition = 'opacity 0.3s, top 0.3s';
+    document.body.appendChild(notif);
+  }
+  notif.textContent = msg;
+  notif.style.opacity = 1;
+  notif.style.top = '30px';
+  setTimeout(() => {
+    notif.style.opacity = 0;
+    notif.style.top = '10px';
+  }, 1200);
+}
+
+function actualizarFavoritosVista() {
+  fetch('favorites.php?ajax=true', {cache: 'no-store'})
+    .then(r => r.json())
+    .then(data => {
+      const cont = document.getElementById('favoritos-lista');
+      if (!cont) return;
+      cont.innerHTML = '';
+      if (!Array.isArray(data) || data.length === 0) {
+        cont.innerHTML = '<p>No tienes productos favoritos.</p>';
+        return;
+      }
+      data.forEach(prod => {
+        const card = document.createElement('div');
+        card.className = 'producto-card';
+        card.innerHTML = `
+          <img src="../assets/images/${prod.imagen || 'hero_image.jpg'}" alt="${prod.nombre}">
+          <h3>${prod.nombre}</h3>
+          <div class="precio">$${parseFloat(prod.precio).toFixed(2)}</div>
+          <div class="acciones">
+            <button class="agregar-carrito" onclick="agregarAlCarrito(${prod.id})"><i class="fa fa-cart-plus"></i> Carrito</button>
+            <button class="eliminar-favorito" onclick="eliminarDeFavoritos(${prod.id})"><i class="fa fa-heart-broken"></i> Quitar</button>
+          </div>
+        `;
+        cont.appendChild(card);
+      });
+    });
+}
+window.actualizarFavoritosVista = actualizarFavoritosVista;
+document.addEventListener('DOMContentLoaded', actualizarFavoritosVista);
+
 renderFavoritos();
+
+function agregarAlCarrito(id) {
+  if (!window.usuarioActual) {
+    alert('Debes iniciar sesión para agregar productos al carrito.');
+    window.location.href = 'login.php';
+    return;
+  }
+  fetch('cart.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: 'agregar=1&productoId=' + encodeURIComponent(id)
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      mostrarNotificacion('Producto agregado al carrito');
+      if (window.actualizarCarritoVista) window.actualizarCarritoVista();
+    } else {
+      alert(data.error || 'No se pudo agregar al carrito.');
+    }
+  })
+  .catch(() => alert('Error de conexión.'));
+}

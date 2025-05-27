@@ -1,51 +1,24 @@
-const productos = [
-    {id: 1, nombre: 'Camisa Polo', precio: 129.99},
-    {id: 2, nombre: 'Jeans Corte Recto', precio: 149.99},
-    {id: 3, nombre: 'Chaqueta de Cuero', precio: 199.99},
-    {id: 4, nombre: 'Zapatos de Cuero', precio: 249.99},
-    {id: 5, nombre: 'Pants Deportivo', precio: 99.99},
-    {id: 6, nombre: 'Camisa Casual', precio: 89.99}
-];
-
-function getUserKey(tipo) {
-    if (!window.usuarioActual) return null;
-    return tipo + '_' + window.usuarioActual;
-}
-
-function getUserArray(tipo) {
-    const key = getUserKey(tipo);
-    if (!key) return [];
-    try {
-        return JSON.parse(localStorage.getItem(key)) || [];
-    } catch { return []; }
-}
-
-function setUserArray(tipo, array) {
-    const key = getUserKey(tipo);
-    if (key) {
-        localStorage.setItem(key, JSON.stringify(array));
-    }
-}
-
 function renderCarrito() {
     const contenedor = document.getElementById('carrito-lista');
     const resumen = document.getElementById('resumen');
+    if (!contenedor || !resumen) return;
     contenedor.innerHTML = '';
     resumen.innerHTML = '';
 
-    fetch('cart.php?ajax=true')
-        .then(response => response.json())
+    fetch('cart.php?ajax=true', {cache: 'no-store'})
+        .then(response => {
+            if (!response.ok) throw new Error('Respuesta no OK');
+            return response.json();
+        })
         .then(data => {
             if (data.error) {
                 contenedor.innerHTML = `<p>${data.error}</p>`;
                 return;
             }
-
-            if (data.length === 0) {
+            if (!Array.isArray(data) || data.length === 0) {
                 contenedor.innerHTML = '<p>Tu carrito está vacío.</p>';
                 return;
             }
-
             let subtotal = 0;
             data.forEach(producto => {
                 subtotal += producto.precio * producto.cantidad;
@@ -61,17 +34,28 @@ function renderCarrito() {
                 `;
                 contenedor.appendChild(item);
             });
-
             const envio = 10.00;
             resumen.innerHTML = `
                 <p>Subtotal: $${subtotal.toFixed(2)}</p>
                 <p>Envío: $${envio.toFixed(2)}</p>
                 <p>Total: $${(subtotal+envio).toFixed(2)}</p>
+                <form method="post" action="cart.php">
+                    <button type="submit" name="finalizar" class="btn-primary">Finalizar compra</button>
+                </form>
             `;
         })
         .catch(error => {
-            contenedor.innerHTML = '<p>Error al cargar el carrito.</p>';
+            contenedor.innerHTML = '<p>Error al cargar el carrito. Intenta recargar la página.</p>';
         });
 }
 
-renderCarrito();
+window.actualizarCarritoVista = renderCarrito;
+
+document.addEventListener('DOMContentLoaded', renderCarrito);
+
+// Permite actualizar el carrito automáticamente al agregar productos desde otras páginas
+window.addEventListener('storage', function(e) {
+    if (e.key === 'carrito_actualizado') {
+        renderCarrito();
+    }
+});

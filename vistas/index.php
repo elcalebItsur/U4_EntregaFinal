@@ -35,6 +35,96 @@ if ($categoriaSeleccionada) {
     <script>
     window.usuarioActual = <?php echo isset($_SESSION['usuario_id']) ? json_encode($_SESSION['usuario_id']) : 'null'; ?>;
     </script>
+    <script>
+    function agregarAlCarrito(id) {
+      if (!window.usuarioActual) {
+        alert('Debes iniciar sesión para agregar productos al carrito.');
+        window.location.href = 'login.php';
+        return;
+      }
+      fetch('cart.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'agregar=1&productoId=' + encodeURIComponent(id)
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          mostrarNotificacion('Producto agregado al carrito');
+          actualizarIconoCarrito();
+          // Notifica a la pestaña del carrito que debe actualizarse
+          if (window.localStorage) {
+            localStorage.setItem('carrito_actualizado', Date.now());
+          }
+          // Si estamos en la página del carrito, actualiza la vista directamente
+          if (window.actualizarCarritoVista) {
+            window.actualizarCarritoVista();
+          }
+        } else {
+          alert(data.error || 'No se pudo agregar al carrito.');
+        }
+      })
+      .catch(() => alert('Error de conexión.'));
+    }
+
+    function mostrarNotificacion(msg) {
+      let notif = document.getElementById('notif-carrito');
+      if (!notif) {
+        notif = document.createElement('div');
+        notif.id = 'notif-carrito';
+        notif.style.position = 'fixed';
+        notif.style.top = '30px';
+        notif.style.right = '30px';
+        notif.style.background = '#44ff99';
+        notif.style.color = '#181818';
+        notif.style.padding = '1rem 2rem';
+        notif.style.borderRadius = '10px';
+        notif.style.fontWeight = 'bold';
+        notif.style.boxShadow = '0 4px 16px #0005';
+        notif.style.zIndex = 9999;
+        notif.style.opacity = 0;
+        notif.style.transition = 'opacity 0.3s, top 0.3s';
+        document.body.appendChild(notif);
+      }
+      notif.textContent = msg;
+      notif.style.opacity = 1;
+      notif.style.top = '30px';
+      setTimeout(() => {
+        notif.style.opacity = 0;
+        notif.style.top = '10px';
+      }, 1200);
+    }
+
+    function actualizarIconoCarrito() {
+      fetch('cart.php?ajax=true')
+        .then(r => r.json())
+        .then(data => {
+          let total = 0;
+          if (Array.isArray(data)) {
+            data.forEach(item => total += parseInt(item.cantidad));
+          }
+          let icon = document.getElementById('cart-count');
+          if (!icon) {
+            const li = document.querySelector('a[href="cart.php"]');
+            if (li) {
+              icon = document.createElement('span');
+              icon.id = 'cart-count';
+              icon.style.background = '#44ff99';
+              icon.style.color = '#181818';
+              icon.style.fontWeight = 'bold';
+              icon.style.fontSize = '0.9rem';
+              icon.style.borderRadius = '50%';
+              icon.style.padding = '2px 8px';
+              icon.style.marginLeft = '6px';
+              icon.style.verticalAlign = 'middle';
+              li.appendChild(icon);
+            }
+          }
+          if (icon) icon.textContent = total > 0 ? total : '';
+        });
+    }
+    document.addEventListener('DOMContentLoaded', actualizarIconoCarrito);
+    </script>
 </head>
 <body>
     <header>
@@ -231,7 +321,7 @@ if ($categoriaSeleccionada) {
         body: 'producto_id=' + encodeURIComponent(id) + '&cantidad=' + encodeURIComponent(cantidad)
       })
       .then(r => r.json())
-      .then(data => {
+      .then data => {
         if (data.success) {
           document.getElementById('modal-compra-mensaje').textContent = '¡Compra realizada con éxito!';
           setTimeout(() => { document.getElementById('modal-compra').style.display = 'none'; location.reload(); }, 1200);
