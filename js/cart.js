@@ -48,28 +48,29 @@ function renderCarrito() {
 
             let subtotal = 0;
             data.forEach(producto => {
-                subtotal += producto.precio;
+                subtotal += producto.precio * producto.cantidad;
                 const item = document.createElement('div');
                 item.className = 'item-carrito';
                 item.innerHTML = `
-                    <p>${producto.nombre}</p>
-                    <p>$${producto.precio.toFixed(2)}</p>
+                    <img src="../assets/images/${producto.imagen || 'hero_image.jpg'}" alt="${producto.nombre}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;">
+                    <div style="flex:1;margin-left:1rem;">
+                        <p style="font-weight:600;">${producto.nombre}</p>
+                        <p>Cantidad: ${producto.cantidad} | Stock: ${producto.stock}</p>
+                        <p>Precio: $${producto.precio.toFixed(2)}</p>
+                    </div>
                 `;
                 contenedor.appendChild(item);
             });
 
             const envio = 10.00;
-            const total = subtotal + envio;
             resumen.innerHTML = `
                 <p>Subtotal: $${subtotal.toFixed(2)}</p>
                 <p>Envío: $${envio.toFixed(2)}</p>
-                <p>Total: $${total.toFixed(2)}</p>
-                <button class="btn-primary">Proceder a pagar</button>
+                <p>Total: $${(subtotal+envio).toFixed(2)}</p>
             `;
         })
         .catch(error => {
             contenedor.innerHTML = '<p>Error al cargar el carrito.</p>';
-            console.error('Error:', error);
         });
 }
 

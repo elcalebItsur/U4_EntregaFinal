@@ -3,11 +3,20 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require_once '../datos/conexion.php';
+require_once '../datos/ProductoDAO.php';
 $foto = null;
 if (isset($_SESSION['usuario_id'])) {
     $stmt = $pdo->prepare('SELECT foto_perfil FROM usuarios WHERE id = ?');
     $stmt->execute([$_SESSION['usuario_id']]);
     $foto = $stmt->fetchColumn();
+}
+
+// Filtrado por categoría
+$categoriaSeleccionada = $_GET['categoria'] ?? null;
+if ($categoriaSeleccionada) {
+    $productos = ProductoDAO::obtenerPorCategoria($categoriaSeleccionada);
+} else {
+    $productos = ProductoDAO::obtenerPopulares(6); // Populares aleatorios
 }
 ?>
 <!DOCTYPE html>
@@ -24,7 +33,7 @@ if (isset($_SESSION['usuario_id'])) {
     <script src="../js/index.js" defer></script>
     <script src="../js/main-header.js" defer></script>
     <script>
-    window.usuarioActual = <?php echo isset($_SESSION['usuario']) ? json_encode($_SESSION['usuario']) : 'null'; ?>;
+    window.usuarioActual = <?php echo isset($_SESSION['usuario_id']) ? json_encode($_SESSION['usuario_id']) : 'null'; ?>;
     </script>
 </head>
 <body>
@@ -97,35 +106,73 @@ if (isset($_SESSION['usuario_id'])) {
                 <img src="../assets/images/hero_image.jpg" alt="Moda Textisur" loading="lazy">
             </div>
         </section>
-        <section class="ofertas" id="ofertas">
-            <h2 style="color:#eab308;">Ofertas Especiales</h2>
-            <div class="productos-grid" id="ofertas-lista"></div>
-        </section>
         <section class="categorias">
             <h2 style="color:#44ff99;">Categorías</h2>
             <div class="grid">
-                <div class="card" onclick="alert('Próximamente: Ropa de Hombre')"><i class="fa fa-mars"></i><span>Hombre</span></div>
-                <div class="card" onclick="alert('Próximamente: Ropa de Mujer')"><i class="fa fa-venus"></i><span>Mujer</span></div>
-                <div class="card" onclick="alert('Próximamente: Ropa para Niños')"><i class="fa fa-child"></i><span>Niños</span></div>
-                <div class="card" onclick="alert('Próximamente: Accesorios')"><i class="fa fa-hat-cowboy"></i><span>Accesorios</span></div>
-                <div class="card" onclick="alert('Próximamente: Deporte')"><i class="fa fa-futbol"></i><span>Deporte</span></div>
-                <div class="card" onclick="alert('Próximamente: Unisex')"><i class="fa fa-user"></i><span>Unisex</span></div>
-                <div class="card" onclick="alert('Próximamente: Invierno')"><i class="fa fa-snowflake"></i><span>Invierno</span></div>
-                <div class="card" onclick="alert('Próximamente: Oficina')"><i class="fa fa-briefcase"></i><span>Oficina</span></div>
+                <div class="card" onclick="window.location.href='index.php?categoria=Hombre'"><i class="fa fa-mars"></i><span>Hombre</span></div>
+                <div class="card" onclick="window.location.href='index.php?categoria=Mujer'"><i class="fa fa-venus"></i><span>Mujer</span></div>
+                <div class="card" onclick="window.location.href='index.php?categoria=Niños'"><i class="fa fa-child"></i><span>Niños</span></div>
+                <div class="card" onclick="window.location.href='index.php?categoria=Accesorios'"><i class="fa fa-hat-cowboy"></i><span>Accesorios</span></div>
+                <div class="card" onclick="window.location.href='index.php?categoria=Deporte'"><i class="fa fa-futbol"></i><span>Deporte</span></div>
+                <div class="card" onclick="window.location.href='index.php?categoria=Unisex'"><i class="fa fa-user"></i><span>Unisex</span></div>
+                <div class="card" onclick="window.location.href='index.php?categoria=Invierno'"><i class="fa fa-snowflake"></i><span>Invierno</span></div>
+                <div class="card" onclick="window.location.href='index.php?categoria=Oficina'"><i class="fa fa-briefcase"></i><span>Oficina</span></div>
             </div>
         </section>
         <section class="populares" id="populares">
-            <h2 style="color:#44ff99;">Más Populares</h2>
-            <div class="productos-grid" id="productos-lista"></div>
-        </section>
-        <section class="temporada">
-            <h2 style="color:#44ff99;">Ropa de Temporada</h2>
-            <div class="productos-grid" id="temporada-lista"></div>
+            <h2 style="color:#44ff99;"><?php echo $categoriaSeleccionada ? 'Productos de ' . htmlspecialchars($categoriaSeleccionada) : 'Más Populares'; ?></h2>
+            <div class="productos-grid">
+                <?php if (empty($productos)): ?>
+                    <div style="color:#eab308;font-size:1.2rem;">No hay productos para mostrar.</div>
+                <?php else: ?>
+                    <?php foreach ($productos as $prod): ?>
+                        <div class="producto-card">
+                            <img src="../assets/images/<?php echo htmlspecialchars($prod['imagen'] ?? 'hero_image.jpg'); ?>" alt="<?php echo htmlspecialchars($prod['nombre']); ?>" onerror="this.src='../assets/images/hero_image.jpg'">
+                            <h3><?php echo htmlspecialchars($prod['nombre']); ?></h3>
+                            <?php if (!empty($prod['nombre_tienda'])): ?>
+                                <div style="color:#eab308;font-size:0.98rem;margin-bottom:0.2rem;text-align:center;">Tienda: <?php echo htmlspecialchars($prod['nombre_tienda']); ?></div>
+                            <?php endif; ?>
+                            <p><?php echo htmlspecialchars($prod['descripcion'] ?? ''); ?></p>
+                            <div class="precio">$<?php echo number_format($prod['precio'],2); ?></div>
+                            <div class="acciones">
+                                <button class="agregar-carrito" onclick="agregarAlCarrito(<?php echo $prod['id']; ?>)"><i class="fa fa-cart-plus"></i> Carrito</button>
+                                <button class="favorito" onclick="agregarAFavoritos(<?php echo $prod['id']; ?>)"><i class="fa fa-heart"></i> Favorito</button>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
         </section>
         <section class="vender">
             <h2>¿Eres vendedor?</h2>
             <p>Empieza a vender tus productos en minutos. Es rápido y fácil.</p>
             <a href="about.php" class="btn-primary">Comienza Ahora</a>
+        </section>
+        <section class="todos-productos" id="todos-productos">
+            <h2 style="color:#44ff99;">Todos los productos disponibles</h2>
+            <div class="productos-grid">
+                <?php 
+                $todos = ProductoDAO::obtenerTodos();
+                if (empty($todos)): ?>
+                    <div style="color:#eab308;font-size:1.2rem;">No hay productos para mostrar.</div>
+                <?php else: ?>
+                    <?php foreach ($todos as $prod): ?>
+                        <div class="producto-card">
+                            <img src="../assets/images/<?php echo htmlspecialchars($prod['imagen'] ?? 'hero_image.jpg'); ?>" alt="<?php echo htmlspecialchars($prod['nombre']); ?>" onerror="this.src='../assets/images/hero_image.jpg'">
+                            <h3><?php echo htmlspecialchars($prod['nombre']); ?></h3>
+                            <?php if (!empty($prod['nombre_tienda'])): ?>
+                                <div style="color:#eab308;font-size:0.98rem;margin-bottom:0.2rem;text-align:center;">Tienda: <?php echo htmlspecialchars($prod['nombre_tienda']); ?></div>
+                            <?php endif; ?>
+                            <p><?php echo htmlspecialchars($prod['descripcion'] ?? ''); ?></p>
+                            <div class="precio">$<?php echo number_format($prod['precio'],2); ?></div>
+                            <div class="acciones">
+                                <button class="agregar-carrito" onclick="agregarAlCarrito(<?php echo $prod['id']; ?>)"><i class="fa fa-cart-plus"></i> Carrito</button>
+                                <button class="favorito" onclick="agregarAFavoritos(<?php echo $prod['id']; ?>)"><i class="fa fa-heart"></i> Favorito</button>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
         </section>
     </main>
     <footer>

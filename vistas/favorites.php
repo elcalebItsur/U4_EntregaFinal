@@ -2,7 +2,7 @@
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['ajax'])) {
-    if (!isset($_SESSION['usuario'])) {
+    if (!isset($_SESSION['usuario_id'])) {
         echo json_encode(['error' => 'Debes iniciar sesión para ver tus favoritos.']);
         exit();
     }
@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['ajax'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!isset($_SESSION['usuario'])) {
+    if (!isset($_SESSION['usuario_id'])) {
         echo json_encode(['error' => 'Debes iniciar sesión para agregar a favoritos.']);
         exit();
     }
@@ -164,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
     <script src="../js/index.js" defer></script>
     <script>
-    window.usuarioActual = <?php echo isset($_SESSION['usuario']) ? json_encode($_SESSION['usuario']) : 'null'; ?>;
+    window.usuarioActual = <?php echo isset($_SESSION['usuario_id']) ? json_encode($_SESSION['usuario_id']) : 'null'; ?>;
     
     function cargarFavoritos() {
         if (!window.usuarioActual) {

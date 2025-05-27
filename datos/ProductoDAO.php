@@ -28,4 +28,20 @@ class ProductoDAO {
         $stmt = $pdo->prepare('DELETE FROM productos WHERE id = ? AND vendedor_id = ?');
         return $stmt->execute([$id, $vendedor_id]);
     }
+    public static function obtenerTodos() {
+        global $pdo;
+        $stmt = $pdo->query('SELECT p.*, u.nombre_tienda FROM productos p LEFT JOIN usuarios u ON p.vendedor_id = u.id');
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public static function obtenerPorCategoria($categoria) {
+        global $pdo;
+        $stmt = $pdo->prepare('SELECT p.*, u.nombre_tienda FROM productos p LEFT JOIN usuarios u ON p.vendedor_id = u.id WHERE p.categoria = ?');
+        $stmt->execute([$categoria]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public static function obtenerPopulares($limite = 6) {
+        global $pdo;
+        $stmt = $pdo->query('SELECT p.*, u.nombre_tienda FROM productos p LEFT JOIN usuarios u ON p.vendedor_id = u.id ORDER BY RANDOM() LIMIT ' . intval($limite));
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

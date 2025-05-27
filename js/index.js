@@ -102,32 +102,23 @@ function verificarSesion() {
 
 function agregarAlCarrito(id) {
     if (!window.usuarioActual) {
-        verificarSesion();
+        alert('Debes iniciar sesión para usar el carrito.');
         return;
     }
     fetch('cart.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `productoId=${id}`
+        body: `agregar=1&productoId=${id}`
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
             alert('Producto agregado al carrito.');
-            // Simular compra instantánea para historial
-            let compras = [];
-            try { compras = JSON.parse(localStorage.getItem('compras_' + window.usuarioActual)) || []; } catch {}
-            const prod = productos.find(p => p.id === id);
-            if (prod) {
-                compras.push(prod);
-                localStorage.setItem('compras_' + window.usuarioActual, JSON.stringify(compras));
-            }
         } else {
             alert(data.error || 'Error al agregar al carrito.');
         }
     })
     .catch(error => {
-        console.error('Error:', error);
         alert('Error al agregar al carrito.');
     });
 }

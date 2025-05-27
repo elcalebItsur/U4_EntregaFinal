@@ -28,3 +28,10 @@ CREATE TABLE IF NOT EXISTS productos (
     imagen VARCHAR(255), -- Nuevo campo para guardar el nombre de la imagen
     fecha_publicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS carrito (
+    usuario_id INT REFERENCES usuarios(id),
+    producto_id INT REFERENCES productos(id),
+    cantidad INT DEFAULT 1,
+    PRIMARY KEY (usuario_id, producto_id)
+);
