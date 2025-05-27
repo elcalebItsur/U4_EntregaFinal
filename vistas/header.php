@@ -5,8 +5,6 @@
         <nav>
             <ul>
                 <li><a href="index.php">Inicio</a></li>
-                <li><a href="favorites.php">Favoritos</a></li>
-                <li><a href="cart.php">Carrito</a></li>
                 <li><a href="about.php">Vende</a></li>
                 <li><a href="acerca.php" class="btn-accent">Acerca de</a></li>
                 <?php if (isset($_SESSION['usuario'])): ?>

@@ -28,15 +28,16 @@ session_start();
             <nav>
                 <ul>
                     <li><a href="index.php">Inicio</a></li>
-                    <li><a href="favorites.php">Favoritos</a></li>
-                    <li><a href="cart.php">Carrito</a></li>
                     <li><a href="about.php">Vende</a></li>
                     <li><a href="acerca.php" class="btn-accent">Acerca de</a></li>
                     <?php if (isset($_SESSION['usuario'])): ?>
+                        <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'Vendedor'): ?>
+                            <li><a href="admin_tienda.php" class="btn-primary">Administrar Tienda</a></li>
+                        <?php endif; ?>
                         <li class="user-menu">
                             <button class="user-avatar-btn" id="user-avatar-btn">
                                 <?php
-                                require_once '../datos/conexion.php';
+                                require_once __DIR__ . '/../datos/conexion.php';
                                 $stmt = $pdo->prepare('SELECT foto_perfil FROM usuarios WHERE id = ?');
                                 $stmt->execute([$_SESSION['usuario_id']]);
                                 $foto = $stmt->fetchColumn();

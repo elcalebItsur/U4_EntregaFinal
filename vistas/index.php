@@ -133,8 +133,6 @@ if ($categoriaSeleccionada) {
             <nav>
                 <ul>
                     <li><a href="index.php">Inicio</a></li>
-                    <li><a href="favorites.php">Favoritos</a></li>
-                    <li><a href="cart.php">Carrito</a></li>
                     <li><a href="about.php">Vende</a></li>
                     <li><a href="acerca.php" class="btn-accent">Acerca de</a></li>
                     <?php if (isset($_SESSION['usuario'])): ?>
@@ -225,9 +223,7 @@ if ($categoriaSeleccionada) {
                             <p><?php echo htmlspecialchars($prod['descripcion'] ?? ''); ?></p>
                             <div class="precio">$<?php echo number_format($prod['precio'],2); ?></div>
                             <div class="acciones">
-                                <button class="agregar-carrito" onclick="agregarAlCarrito(<?php echo $prod['id']; ?>)"><i class="fa fa-cart-plus"></i> Carrito</button>
                                 <button class="comprar-ahora" onclick="abrirModalCompra(<?php echo $prod['id']; ?>, '<?php echo htmlspecialchars(addslashes($prod['nombre'])); ?>', <?php echo (int)($prod['stock'] ?? 0); ?>)"><i class="fa fa-bolt"></i> Comprar ahora</button>
-                                <button class="favorito" onclick="agregarAFavoritos(<?php echo $prod['id']; ?>)"><i class="fa fa-heart"></i> Favorito</button>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -257,9 +253,7 @@ if ($categoriaSeleccionada) {
                             <p><?php echo htmlspecialchars($prod['descripcion'] ?? ''); ?></p>
                             <div class="precio">$<?php echo number_format($prod['precio'],2); ?></div>
                             <div class="acciones">
-                                <button class="agregar-carrito" onclick="agregarAlCarrito(<?php echo $prod['id']; ?>)"><i class="fa fa-cart-plus"></i> Carrito</button>
                                 <button class="comprar-ahora" onclick="abrirModalCompra(<?php echo $prod['id']; ?>, '<?php echo htmlspecialchars(addslashes($prod['nombre'])); ?>', <?php echo (int)($prod['stock'] ?? 0); ?>)"><i class="fa fa-bolt"></i> Comprar ahora</button>
-                                <button class="favorito" onclick="agregarAFavoritos(<?php echo $prod['id']; ?>)"><i class="fa fa-heart"></i> Favorito</button>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -287,6 +281,10 @@ if ($categoriaSeleccionada) {
     <script src="../js/index.js"></script>
     <script>
     function abrirModalCompra(id, nombre, stock) {
+      if (!window.usuarioActual) {
+        alert('Necesitas iniciar sesión para hacer una compra.');
+        return;
+      }
       document.getElementById('modal-compra').style.display = 'flex';
       document.getElementById('modal-nombre-producto').textContent = nombre;
       document.getElementById('modal-cantidad-compra').value = 1;
@@ -321,10 +319,13 @@ if ($categoriaSeleccionada) {
         body: 'producto_id=' + encodeURIComponent(id) + '&cantidad=' + encodeURIComponent(cantidad)
       })
       .then(r => r.json())
-      .then data => {
+      .then(data => {
         if (data.success) {
-          document.getElementById('modal-compra-mensaje').textContent = '¡Compra realizada con éxito!';
-          setTimeout(() => { document.getElementById('modal-compra').style.display = 'none'; location.reload(); }, 1200);
+          document.getElementById('modal-compra-mensaje').textContent = 'COMPRA REALIZADA CORRECTAMENTE';
+          setTimeout(() => {
+            document.getElementById('modal-compra').style.display = 'none';
+            window.location.href = 'mis_compras.php';
+          }, 1200);
         } else {
           document.getElementById('modal-compra-mensaje').textContent = data.error || 'Error al comprar.';
         }

@@ -26,8 +26,6 @@
         <nav>
             <ul>
                 <li><a href="index.php">Inicio</a></li>
-                <li><a href="favorites.php">Favoritos</a></li>
-                <li><a href="cart.php">Carrito</a></li>
                 <li><a href="about.php">Vende</a></li>
                 <li><a href="acerca.php" class="btn-accent">Acerca de</a></li>
                 <?php if (isset($_SESSION['usuario'])): ?>
@@ -43,9 +41,11 @@
                                 <small style="display:block;color:#aaa;"><?php echo htmlspecialchars($_SESSION['email']); ?></small>
                             </div>
                             <a href="perfil.php"><i class="fas fa-user"></i> Mi perfil</a>
-                            <a href="direcciones.php"><i class="fas fa-map-marker-alt"></i> Mis direcciones</a>
-                            <a href="pedidos.php"><i class="fas fa-box"></i> Mis pedidos</a>
-                            <a href="favorites.php"><i class="fas fa-heart"></i> Favoritos</a>
+                            <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'Vendedor'): ?>
+                                <a href="mis_ventas.php"><i class="fas fa-box"></i> Mis ventas</a>
+                            <?php else: ?>
+                                <a href="mis_compras.php"><i class="fas fa-box"></i> Mis compras</a>
+                            <?php endif; ?>
                             <div class="divider"></div>
                             <a href="../logout.php"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
                         </div>
@@ -65,7 +65,6 @@
             <p>Descripción del producto. Tallas disponibles: S, M, L, XL.</p>
             <p><strong>$129.99</strong></p>
             <button class="btn-accent">Agregar al carrito</button>
-            <button class="btn-secondary">Agregar a favoritos</button>
         </div>
         <div class="reseñas">
             <h3>Reseñas</h3>

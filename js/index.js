@@ -40,12 +40,10 @@ function renderOfertas() {
                 <span style='margin-left:0.5rem;'>$${prod.precio.toFixed(2)}</span>
             </div>
             <div class="acciones">
-                <button class="agregar-carrito" title="Agregar al carrito"><i class="fa fa-cart-plus"></i> Carrito</button>
-                <button class="favorito" title="Agregar a favoritos"><i class="fa fa-heart"></i> Favorito</button>
+                <button class="comprar-ahora" title="Comprar ahora"><i class="fa fa-bolt"></i> Comprar ahora</button>
             </div>
         `;
-        card.querySelector('.agregar-carrito').onclick = () => agregarAlCarrito(prod.id);
-        card.querySelector('.favorito').onclick = () => agregarAFavoritos(prod.id);
+        card.querySelector('.comprar-ahora').onclick = () => abrirModalCompra(prod.id, prod.nombre, prod.stock ?? 99);
         cont.appendChild(card);
     });
 }
@@ -62,12 +60,10 @@ function renderProductos() {
             <p>${prod.descripcion}</p>
             <div class="precio">$${prod.precio.toFixed(2)}</div>
             <div class="acciones">
-                <button class="agregar-carrito" title="Agregar al carrito"><i class="fa fa-cart-plus"></i> Carrito</button>
-                <button class="favorito" title="Agregar a favoritos"><i class="fa fa-heart"></i> Favorito</button>
+                <button class="comprar-ahora" title="Comprar ahora"><i class="fa fa-bolt"></i> Comprar ahora</button>
             </div>
         `;
-        card.querySelector('.agregar-carrito').onclick = () => agregarAlCarrito(prod.id);
-        card.querySelector('.favorito').onclick = () => agregarAFavoritos(prod.id);
+        card.querySelector('.comprar-ahora').onclick = () => abrirModalCompra(prod.id, prod.nombre, prod.stock ?? 99);
         cont.appendChild(card);
     });
 }
@@ -84,12 +80,10 @@ function renderTemporada() {
             <p>${prod.descripcion}</p>
             <div class="precio">$${prod.precio.toFixed(2)}</div>
             <div class="acciones">
-                <button class="agregar-carrito" title="Agregar al carrito"><i class="fa fa-cart-plus"></i> Carrito</button>
-                <button class="favorito" title="Agregar a favoritos"><i class="fa fa-heart"></i> Favorito</button>
+                <button class="comprar-ahora" title="Comprar ahora"><i class="fa fa-bolt"></i> Comprar ahora</button>
             </div>
         `;
-        card.querySelector('.agregar-carrito').onclick = () => agregarAlCarrito(prod.id);
-        card.querySelector('.favorito').onclick = () => agregarAFavoritos(prod.id);
+        card.querySelector('.comprar-ahora').onclick = () => abrirModalCompra(prod.id, prod.nombre, prod.stock ?? 99);
         cont.appendChild(card);
     });
 }

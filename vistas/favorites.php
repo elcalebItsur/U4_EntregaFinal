@@ -66,7 +66,6 @@ foreach ($favoritos_ids as $pid) {
                         <h3><?php echo htmlspecialchars($prod['nombre']); ?></h3>
                         <div class="precio">$<?php echo number_format($prod['precio'],2); ?></div>
                         <div class="acciones">
-                            <button class="agregar-carrito" onclick="agregarAlCarrito(<?php echo $prod['id']; ?>)"><i class="fa fa-cart-plus"></i> Carrito</button>
                             <button class="eliminar-favorito" onclick="eliminarDeFavoritos(<?php echo $prod['id']; ?>)"><i class="fa fa-heart-broken"></i> Quitar</button>
                         </div>
                     </div>
