@@ -35,3 +35,9 @@ CREATE TABLE IF NOT EXISTS carrito (
     cantidad INT DEFAULT 1,
     PRIMARY KEY (usuario_id, producto_id)
 );
+
+CREATE TABLE IF NOT EXISTS favoritos (
+    usuario_id INT REFERENCES usuarios(id),
+    producto_id INT REFERENCES productos(id),
+    PRIMARY KEY (usuario_id, producto_id)
+);
