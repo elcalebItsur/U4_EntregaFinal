@@ -16,13 +16,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($nombre && $precio && $vendedor_id && $imagen && $imagen['tmp_name']) {
         try {
             $pdo->beginTransaction();
-            $stmt = $pdo->prepare("INSERT INTO productos (nombre, descripcion, precio, categoria, stock, vendedor_id) VALUES (?, ?, ?, ?, ?, ?) RETURNING id");
-            $stmt->execute([$nombre, $descripcion, $precio, $categoria, $stock, $vendedor_id]);
-            $producto_id = $stmt->fetchColumn();
-
-            $imgData = file_get_contents($imagen['tmp_name']);
-            $stmtImg = $pdo->prepare("INSERT INTO imagenes (producto_id, nombre_archivo, tipo, datos) VALUES (?, ?, ?, ?)");
-            $stmtImg->execute([$producto_id, $imagen['name'], $imagen['type'], $imgData]);
+            // Forzar conversión a UTF-8 solo si no está ya en UTF-8
+            function to_utf8($str) {
+                return mb_convert_encoding($str, 'UTF-8', mb_detect_encoding($str, 'UTF-8, ISO-8859-1, ISO-8859-15', true));
+            }
+            $nombre = to_utf8($nombre);
+            $descripcion = to_utf8($descripcion);
+            $categoria = to_utf8($categoria);
+            // Guardar la imagen en assets/images y solo guardar el nombre en la base
+            $imgName = basename($imagen['name']);
+            $destino = __DIR__ . '/../assets/images/' . $imgName;
+            if (!move_uploaded_file($imagen['tmp_name'], $destino)) {
+                throw new Exception('No se pudo guardar la imagen en la carpeta de imágenes.');
+            }
+            $stmt = $pdo->prepare("INSERT INTO productos (nombre, descripcion, precio, categoria, stock, vendedor_id, imagen) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$nombre, $descripcion, $precio, $categoria, $stock, $vendedor_id, $imgName]);
             $pdo->commit();
             $mensaje = 'Producto registrado correctamente.';
         } catch (Exception $e) {

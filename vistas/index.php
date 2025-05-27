@@ -3,9 +3,12 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require_once '../datos/conexion.php';
-$stmt = $pdo->prepare('SELECT foto_perfil FROM usuarios WHERE id = ?');
-$stmt->execute([$_SESSION['usuario_id']]);
-$foto = $stmt->fetchColumn();
+$foto = null;
+if (isset($_SESSION['usuario_id'])) {
+    $stmt = $pdo->prepare('SELECT foto_perfil FROM usuarios WHERE id = ?');
+    $stmt->execute([$_SESSION['usuario_id']]);
+    $foto = $stmt->fetchColumn();
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">

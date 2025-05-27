@@ -25,13 +25,6 @@ CREATE TABLE IF NOT EXISTS productos (
     categoria VARCHAR(50),
     stock INT DEFAULT 0,
     vendedor_id INT REFERENCES usuarios(id),
+    imagen VARCHAR(255), -- Nuevo campo para guardar el nombre de la imagen
     fecha_publicacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS imagenes (
-    id SERIAL PRIMARY KEY,
-    producto_id INT REFERENCES productos(id) ON DELETE CASCADE,
-    nombre_archivo VARCHAR(255),
-    tipo VARCHAR(50),
-    datos BYTEA NOT NULL
 );

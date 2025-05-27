@@ -69,11 +69,8 @@ if ($usuario['tipo'] === 'Vendedor') {
                 <div class="producto-card">
                     <?php
                     $img = '../assets/images/hero_image.jpg';
-                    $stmtImg = $pdo->prepare('SELECT nombre_archivo FROM imagenes WHERE producto_id = ? LIMIT 1');
-                    $stmtImg->execute([$prod['id']]);
-                    $imgRow = $stmtImg->fetch();
-                    if ($imgRow && file_exists('../assets/images/' . $imgRow['nombre_archivo'])) {
-                        $img = '../assets/images/' . $imgRow['nombre_archivo'];
+                    if (!empty($prod['imagen']) && file_exists(__DIR__ . '/../assets/images/' . $prod['imagen'])) {
+                        $img = '../assets/images/' . $prod['imagen'];
                     }
                     ?>
                     <img src="<?php echo $img; ?>" alt="<?php echo htmlspecialchars($prod['nombre']); ?>" />

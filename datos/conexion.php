@@ -10,6 +10,7 @@ $options = [
 ];
 try {
     $pdo = new PDO("pgsql:host=$host;dbname=$db", $user, $pass, $options);
+    $pdo->exec("SET NAMES 'UTF8'");
 } catch (PDOException $e) {
     die('Error de conexión: ' . $e->getMessage());
 }
