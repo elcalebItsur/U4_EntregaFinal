@@ -20,4 +20,10 @@ class UsuarioDAO {
             $data['fecha_nacimiento'], $data['tipo'], $data['nombre_tienda'], $data['rfc'], $data['direccion'], $data['foto_perfil']
         ]);
     }
+    public static function obtenerPorEmail($email) {
+        global $pdo;
+        $stmt = $pdo->prepare('SELECT * FROM usuarios WHERE email = ?');
+        $stmt->execute([$email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

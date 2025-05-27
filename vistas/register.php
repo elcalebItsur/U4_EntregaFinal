@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     // Verificar si el correo ya existe
-    $existe = UsuarioDAO::obtenerPorId($email); // Cambia esto si tienes un método para buscar por email
+    $existe = UsuarioDAO::obtenerPorEmail($email);
     if ($existe) {
         $mensaje = 'El correo ya está registrado.';
     } else {
