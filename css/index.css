@@ -98,10 +98,49 @@ nav ul li a, nav ul li span { font-size: 1rem; }
 .producto-card button.favorito:hover {
     background: #facc15;
 }
+.comprar-ahora {
+    background: #e63946;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 0.9rem;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: background 0.2s;
+    font-weight: 500;
+}
+.comprar-ahora:hover {
+    background: #b91c1c;
+    color: #fff;
+}
 .vender { background: #1e1e1e; border-radius: 12px; margin-top: 2.5rem; padding: 2rem; text-align: center; }
 .vender h2 { color: #44ff99; }
 .vender a { margin-top: 1rem; }
 footer { margin-top: 3rem; background: #232323; border-radius: 10px 10px 0 0; }
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+}
+.modal-content {
+    background: #232323;
+    padding: 2rem 2.5rem;
+    border-radius: 14px;
+    max-width: 350px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+}
 @media (max-width: 900px) {
             .hero { flex-direction: column; text-align:center; }
             .hero-img { text-align:center; margin-top:1.5rem; }

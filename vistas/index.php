@@ -136,6 +136,7 @@ if ($categoriaSeleccionada) {
                             <div class="precio">$<?php echo number_format($prod['precio'],2); ?></div>
                             <div class="acciones">
                                 <button class="agregar-carrito" onclick="agregarAlCarrito(<?php echo $prod['id']; ?>)"><i class="fa fa-cart-plus"></i> Carrito</button>
+                                <button class="comprar-ahora" onclick="abrirModalCompra(<?php echo $prod['id']; ?>, '<?php echo htmlspecialchars(addslashes($prod['nombre'])); ?>', <?php echo (int)($prod['stock'] ?? 0); ?>)"><i class="fa fa-bolt"></i> Comprar ahora</button>
                                 <button class="favorito" onclick="agregarAFavoritos(<?php echo $prod['id']; ?>)"><i class="fa fa-heart"></i> Favorito</button>
                             </div>
                         </div>
@@ -167,6 +168,7 @@ if ($categoriaSeleccionada) {
                             <div class="precio">$<?php echo number_format($prod['precio'],2); ?></div>
                             <div class="acciones">
                                 <button class="agregar-carrito" onclick="agregarAlCarrito(<?php echo $prod['id']; ?>)"><i class="fa fa-cart-plus"></i> Carrito</button>
+                                <button class="comprar-ahora" onclick="abrirModalCompra(<?php echo $prod['id']; ?>, '<?php echo htmlspecialchars(addslashes($prod['nombre'])); ?>', <?php echo (int)($prod['stock'] ?? 0); ?>)"><i class="fa fa-bolt"></i> Comprar ahora</button>
                                 <button class="favorito" onclick="agregarAFavoritos(<?php echo $prod['id']; ?>)"><i class="fa fa-heart"></i> Favorito</button>
                             </div>
                         </div>
@@ -178,5 +180,72 @@ if ($categoriaSeleccionada) {
     <footer>
         <p>&copy; 2025 TEXTISUR. Todos los derechos reservados.</p>
     </footer>
+    <!-- Modal de compra -->
+    <div id="modal-compra" class="modal" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;">
+      <div class="modal-content" style="background:#232323;padding:2rem 2.5rem;border-radius:14px;max-width:350px;width:100%;text-align:center;position:relative;">
+        <button id="cerrar-modal-compra" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.3rem;color:#aaa;cursor:pointer;">&times;</button>
+        <h3 style="color:#44ff99;">Comprar <span id="modal-nombre-producto"></span></h3>
+        <div style="margin:1rem 0;">
+          <label for="modal-cantidad-compra">Cantidad:</label>
+          <input type="number" id="modal-cantidad-compra" min="1" value="1" style="width:60px;text-align:center;">
+          <div id="modal-stock-info" style="color:#eab308;font-size:0.95rem;margin-top:0.3rem;"></div>
+        </div>
+        <button id="btn-confirmar-compra" class="btn-primary" style="width:100%;margin-top:1rem;">Confirmar compra</button>
+        <div id="modal-compra-mensaje" style="margin-top:1rem;font-size:1rem;"></div>
+      </div>
+    </div>
+    <script src="../js/index.js"></script>
+    <script>
+    function abrirModalCompra(id, nombre, stock) {
+      document.getElementById('modal-compra').style.display = 'flex';
+      document.getElementById('modal-nombre-producto').textContent = nombre;
+      document.getElementById('modal-cantidad-compra').value = 1;
+      document.getElementById('modal-cantidad-compra').max = stock;
+      document.getElementById('modal-stock-info').textContent = 'Stock disponible: ' + stock;
+      document.getElementById('modal-compra-mensaje').textContent = '';
+      document.getElementById('btn-confirmar-compra').onclick = function() {
+        confirmarCompra(id, stock);
+      };
+    }
+    document.getElementById('cerrar-modal-compra').onclick = function() {
+      document.getElementById('modal-compra').style.display = 'none';
+    };
+    window.onclick = function(event) {
+      var modal = document.getElementById('modal-compra');
+      if (event.target === modal) modal.style.display = 'none';
+    };
+    function confirmarCompra(id, stock) {
+      var cantidad = parseInt(document.getElementById('modal-cantidad-compra').value);
+      if (isNaN(cantidad) || cantidad < 1) {
+        document.getElementById('modal-compra-mensaje').textContent = 'Cantidad inválida.';
+        return;
+      }
+      if (cantidad > stock) {
+        document.getElementById('modal-compra-mensaje').textContent = 'No hay suficiente stock disponible.';
+        return;
+      }
+      document.getElementById('btn-confirmar-compra').disabled = true;
+      fetch('comprar.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'producto_id=' + encodeURIComponent(id) + '&cantidad=' + encodeURIComponent(cantidad)
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('modal-compra-mensaje').textContent = '¡Compra realizada con éxito!';
+          setTimeout(() => { document.getElementById('modal-compra').style.display = 'none'; location.reload(); }, 1200);
+        } else {
+          document.getElementById('modal-compra-mensaje').textContent = data.error || 'Error al comprar.';
+        }
+      })
+      .catch(() => {
+        document.getElementById('modal-compra-mensaje').textContent = 'Error de conexión.';
+      })
+      .finally(() => {
+        document.getElementById('btn-confirmar-compra').disabled = false;
+      });
+    }
+    </script>
 </body>
 </html>

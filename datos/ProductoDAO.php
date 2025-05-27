@@ -7,10 +7,15 @@ class ProductoDAO {
         $stmt->execute([$vendedor_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public static function obtenerPorId($id, $vendedor_id) {
+    public static function obtenerPorId($id, $vendedor_id = null) {
         global $pdo;
-        $stmt = $pdo->prepare('SELECT * FROM productos WHERE id = ? AND vendedor_id = ?');
-        $stmt->execute([$id, $vendedor_id]);
+        if ($vendedor_id === null) {
+            $stmt = $pdo->prepare('SELECT * FROM productos WHERE id = ?');
+            $stmt->execute([$id]);
+        } else {
+            $stmt = $pdo->prepare('SELECT * FROM productos WHERE id = ? AND vendedor_id = ?');
+            $stmt->execute([$id, $vendedor_id]);
+        }
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     public static function actualizar($id, $nombre, $precio, $categoria, $stock, $vendedor_id) {
