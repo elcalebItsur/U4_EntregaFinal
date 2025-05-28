@@ -16,14 +16,4 @@ nav ul li a, nav ul li span { font-size: 1rem; }
     display: none;
 }
 
-/* Bordes de validación JS */
-.input-invalido {
-    border: 2px solid red !important;
-    outline-color: red !important;
-}
-.input-valido {
-    border: 2px solid green !important;
-    outline-color: green !important;
-}
-
 

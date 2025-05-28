@@ -33,7 +33,7 @@ nav ul li a, nav ul li span { font-size: 1rem; }
     color: #fff;
     min-height: 470px; /* Aumenta el alto mínimo */
     min-width: 320px;  /* Más responsivo */
-    max-width: 380px;  /* Un poco más angosto */
+    max-width: 380px;  
     margin: 0 auto;
 }
 .producto-card:hover {

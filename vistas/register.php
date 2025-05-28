@@ -63,7 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="../js/register-menu.js" defer></script>
 </head>
 <body>
-    <!-- Reemplazar solo la parte del header (desde <header> hasta </header>) con este código: -->
 <header>
     <div class="header-content">
         <h1 class="logo" onclick="location.href='../vistas/index.php'">Textisur</h1>

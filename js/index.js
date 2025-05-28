@@ -1,4 +1,3 @@
-
 if (window.productos) {
 } else {
     window.productos = [
@@ -30,30 +29,6 @@ if (window.productos) {
 }
 const productos = window.productos;
 
-function renderOfertas() {
-    const cont = document.getElementById('ofertas-lista');
-    if (!cont) return;
-    cont.innerHTML = '';
-    productos.filter(p => p.oferta).forEach(prod => {
-        const card = document.createElement('div');
-        card.className = 'producto-card';
-        card.innerHTML = `
-            <img src="${prod.imagen}" alt="${prod.nombre}" onerror="this.src='../assets/images/hero_image.jpg'">
-            <h3>${prod.nombre}</h3>
-            <p>${prod.descripcion}</p>
-            <div class="precio">
-                <span style='text-decoration:line-through;color:#ff6b6b;font-size:0.95rem;'>$${prod.precioOriginal?.toFixed(2) || ''}</span>
-                <span style='margin-left:0.5rem;'>$${prod.precio.toFixed(2)}</span>
-            </div>
-            <div class="acciones">
-                <button class="comprar-ahora" title="Comprar ahora"><i class="fa fa-bolt"></i> Comprar ahora</button>
-            </div>
-        `;
-        card.querySelector('.comprar-ahora').onclick = () => abrirModalCompra(prod.id, prod.nombre, prod.stock ?? 99);
-        cont.appendChild(card);
-    });
-}
-
 function renderProductos() {
     const cont = document.getElementById('productos-lista');
     if (!cont) return;
@@ -79,86 +54,8 @@ function renderProductos() {
     });
 }
 
-function renderTemporada() {
-    const cont = document.getElementById('temporada-lista');
-    cont.innerHTML = '';
-    productos.filter(p => p.temporada).forEach(prod => {
-        const card = document.createElement('div');
-        card.className = 'producto-card';
-        card.innerHTML = `
-            <img src="${prod.imagen}" alt="${prod.nombre}" onerror="this.src='../assets/images/hero_image.jpg'">
-            <h3>${prod.nombre}</h3>
-            <p>${prod.descripcion}</p>
-            <div class="precio">$${prod.precio.toFixed(2)}</div>
-            <div class="acciones">
-                <button class="comprar-ahora" title="Comprar ahora"><i class="fa fa-bolt"></i> Comprar ahora</button>
-            </div>
-        `;
-        card.querySelector('.comprar-ahora').onclick = () => abrirModalCompra(prod.id, prod.nombre, prod.stock ?? 99);
-        cont.appendChild(card);
-    });
-}
-
-function verificarSesion() {
-    if (!window.usuarioActual) {
-        alert('Debes iniciar sesión para usar esta funcionalidad.');
-    }
-}
-
-function agregarAFavoritos(id) {
-    if (!window.usuarioActual) {
-        verificarSesion();
-        return;
-    }
-    fetch('favorites.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `productoId=${id}`
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Producto agregado a favoritos.');
-            // Guardar producto completo en favoritos
-            let favoritos = [];
-            try { favoritos = JSON.parse(localStorage.getItem('favoritos_' + window.usuarioActual)) || []; } catch {}
-            const prod = productos.find(p => p.id === id);
-            if (prod && !favoritos.some(f => f.id === id)) {
-                favoritos.push(prod);
-                localStorage.setItem('favoritos_' + window.usuarioActual, JSON.stringify(favoritos));
-            }
-        } else {
-            alert(data.error || 'Error al agregar a favoritos.');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error al agregar a favoritos.');
-    });
-}
-
-function getUserKey(tipo) {
-    if (!window.usuarioActual) return null;
-    return tipo + '_' + window.usuarioActual;
-}
-
-function getUserArray(tipo) {
-    const key = getUserKey(tipo);
-    if (!key) return [];
-    try {
-        return JSON.parse(localStorage.getItem(key)) || [];
-    } catch { return []; }
-}
-
-function setUserArray(tipo, arr) {
-    const key = getUserKey(tipo);
-    if (key) localStorage.setItem(key, JSON.stringify(arr));
-}
-
 window.addEventListener('DOMContentLoaded', () => {
     renderProductos();
-    renderOfertas();
-    renderTemporada();
     // Cerrar modal usuario al hacer clic fuera
     const userModal = document.getElementById('user-modal');
     if (userModal) {

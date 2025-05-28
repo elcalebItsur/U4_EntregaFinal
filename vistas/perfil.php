@@ -146,12 +146,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="form-group full-width profile-actions">
                 <button type="submit" class="btn-primary">Guardar cambios</button>
-                <a href="cambiar-password.php" class="btn-secondary">Cambiar contraseña</a>
+                
             </div>
         </form>
     </main>
     <script>
-    // Dropdown user menu
+    //  user menu
     document.addEventListener('DOMContentLoaded', function() {
         const btn = document.getElementById('user-menu-btn');
         const dropdown = document.getElementById('user-dropdown');

@@ -1,6 +1,24 @@
-header { background: #181818; box-shadow: none; border-bottom: 1.5px solid #232323; }
-.header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 1.2rem 2rem; }
-.logo { font-size:2rem; color:#44ff99; font-weight:700; letter-spacing:1px; cursor:pointer; margin-right:2rem; }
+header { 
+    background: #181818; 
+    box-shadow: none; 
+    border-bottom: 1.5px solid #232323; 
+}
+.header-content { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 1.2rem 2rem; 
+}
+.logo { 
+    font-size:2rem; 
+    color:#44ff99; 
+    font-weight:700; 
+    letter-spacing:1px; 
+    cursor:pointer; 
+    margin-right:2rem; 
+}
 nav ul { display: flex; gap: 1.2rem; align-items: center; list-style: none; }
 nav ul li { display: flex; align-items: center; }
 nav ul li a, nav ul li span { font-size: 1rem; }

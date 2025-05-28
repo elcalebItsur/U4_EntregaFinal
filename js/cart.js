@@ -1,4 +1,3 @@
-// cart.js is now obsolete. All cart operations use traditional form submissions. This file is intentionally left blank for compatibility.
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('modal-eliminar-cart');
     const modalNombre = document.getElementById('modal-eliminar-cart-nombre');
