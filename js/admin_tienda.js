@@ -1,12 +1,13 @@
-// cart.js is now obsolete. All cart operations use traditional form submissions. This file is intentionally left blank for compatibility.
+// admin_tienda.js
+
 document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('modal-eliminar-cart');
-    const modalNombre = document.getElementById('modal-eliminar-cart-nombre');
-    const modalForm = document.getElementById('modal-eliminar-cart-form');
-    const closeBtn = document.getElementById('cerrar-modal-eliminar-cart');
+    const modal = document.getElementById('modal-eliminar-producto');
+    const modalNombre = document.getElementById('modal-eliminar-nombre');
+    const modalForm = document.getElementById('modal-eliminar-form');
+    const closeBtn = document.getElementById('cerrar-modal-eliminar');
     let productoId = null;
 
-    document.querySelectorAll('.btn-eliminar-cart-modal').forEach(btn => {
+    document.querySelectorAll('.btn-eliminar-modal').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             productoId = this.getAttribute('data-id');
@@ -20,7 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.style.display = 'none';
     });
 
-    document.getElementById('cerrar-modal-eliminar-cart-2').addEventListener('click', function() {
+    // Permitir cerrar el modal con el botón cancelar
+    const closeBtn2 = document.getElementById('cerrar-modal-eliminar-2');
+    closeBtn2.addEventListener('click', function() {
         modal.style.display = 'none';
     });
 
@@ -33,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
     modalForm.addEventListener('submit', function(e) {
         e.preventDefault();
         if (productoId) {
-            window.location.href = 'cart.php?eliminar=' + productoId;
+            window.location.href = 'admin_tienda.php?eliminar=' + productoId;
         }
     });
 });

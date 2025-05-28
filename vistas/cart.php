@@ -74,10 +74,7 @@ $carrito = CarritoDAO::obtenerCarrito($usuario_id);
                             <p>Cantidad: <?php echo $item['cantidad']; ?> | Stock: <?php echo $item['stock']; ?></p>
                             <p>Precio: $<?php echo number_format($item['precio'],2); ?></p>
                         </div>
-                        <form method="get" action="cart.php" class="cart-item-form">
-                            <input type="hidden" name="eliminar" value="<?php echo $item['producto_id']; ?>">
-                            <button type="submit" class="btn-danger">Eliminar</button>
-                        </form>
+                        <button type="button" class="btn-danger btn-eliminar-cart-modal" data-id="<?php echo $item['producto_id']; ?>" data-nombre="<?php echo htmlspecialchars($item['nombre']); ?>">Eliminar</button>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
@@ -97,6 +94,18 @@ $carrito = CarritoDAO::obtenerCarrito($usuario_id);
     <div style="text-align:center; margin: 2rem 0;">
         <a href="index.php" class="btn-primary" style="padding:0.7rem 2rem; font-size:1.1rem; border-radius:8px; text-decoration:none;">Seguir comprando</a>
     </div>
+    <div id="modal-eliminar-cart" class="modal" style="display:none; align-items:center; justify-content:center; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.45); z-index:3000;">
+        <div class="modal-content" style="background:#fff; color:#232323; border-radius:14px; padding:2rem 2.5rem; min-width:320px; max-width:95vw; box-shadow:0 8px 32px #0005; position:relative; display:flex; flex-direction:column; align-items:center;">
+            <button id="cerrar-modal-eliminar-cart" style="position:absolute; top:1rem; right:1rem; background:none; border:none; font-size:2rem; color:#ff6b6b; cursor:pointer;">&times;</button>
+            <h3>¿Eliminar producto del carrito?</h3>
+            <p>¿Estás seguro de que deseas eliminar <span id="modal-eliminar-cart-nombre" style="font-weight:bold;"></span> de tu carrito?</p>
+            <form id="modal-eliminar-cart-form">
+                <button type="submit" class="btn-danger" style="margin-right:1rem;">Eliminar</button>
+                <button type="button" id="cerrar-modal-eliminar-cart-2" class="btn-secondary">Cancelar</button>
+            </form>
+        </div>
+    </div>
     <?php include 'footer.php'; ?>
+    <script src="../js/cart.js" defer></script>
 </body>
 </html>

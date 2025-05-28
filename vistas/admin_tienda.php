@@ -75,12 +75,24 @@ $productos = ProductoDAO::obtenerPorVendedor($vendedor_id);
                         <td><?php echo htmlspecialchars($prod['stock']); ?></td>
                         <td>
                             <a href="agregar_producto.php?editar=<?php echo $prod['id']; ?>" class="btn-edit">Editar</a>
-                            <a href="admin_tienda.php?eliminar=<?php echo $prod['id']; ?>" class="btn-danger" onclick="return confirm('¿Eliminar este producto?')">Eliminar</a>
+                            <a href="#" class="btn-danger btn-eliminar-modal" data-id="<?php echo $prod['id']; ?>" data-nombre="<?php echo htmlspecialchars($prod['nombre']); ?>">Eliminar</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <div id="modal-eliminar-producto" class="modal" style="display:none; align-items:center; justify-content:center;">
+            <div class="modal-content" style="min-width:320px; max-width:95vw;">
+                <button id="cerrar-modal-eliminar" style="position:absolute; top:1rem; right:1rem; background:none; border:none; font-size:2rem; color:#ff6b6b; cursor:pointer;">&times;</button>
+                <h3>¿Eliminar producto?</h3>
+                <p>¿Estás seguro de que deseas eliminar <span id="modal-eliminar-nombre" style="font-weight:bold;"></span>?</p>
+                <form id="modal-eliminar-form">
+                    <button type="submit" class="btn-danger" style="margin-right:1rem;">Eliminar</button>
+                    <button type="button" id="cerrar-modal-eliminar-2" class="btn-secondary">Cancelar</button>
+                </form>
+            </div>
+        </div>
     </main>
+    <script src="../js/admin_tienda.js" defer></script>
 </body>
 </html>
