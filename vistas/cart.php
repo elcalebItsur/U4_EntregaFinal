@@ -10,18 +10,12 @@ if (!isset($_SESSION['usuario_id'])) {
 $usuario_id = $_SESSION['usuario_id'];
 $mensaje = '';
 
-// AJAX: agregar producto al carrito
+// Agregar producto al carrito SOLO por formulario tradicional (sin AJAX)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregar']) && isset($_POST['productoId'])) {
     $producto_id = intval($_POST['productoId']);
-    CarritoDAO::agregarProducto($usuario_id, $producto_id, 1);
-    echo json_encode(['success' => true]);
-    exit();
-}
-// AJAX: obtener carrito
-if (isset($_GET['ajax']) && $_GET['ajax'] == 'true') {
-    $carrito = CarritoDAO::obtenerCarrito($usuario_id);
-    echo json_encode($carrito);
-    exit();
+    $cantidad = isset($_POST['cantidad']) ? max(1, intval($_POST['cantidad'])) : 1;
+    CarritoDAO::agregarProducto($usuario_id, $producto_id, $cantidad);
+    $mensaje = 'Producto agregado al carrito.';
 }
 // Eliminar producto del carrito
 if (isset($_GET['eliminar'])) {
@@ -56,10 +50,6 @@ $carrito = CarritoDAO::obtenerCarrito($usuario_id);
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/cart.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-    <script src="../js/cart.js" defer></script>
-    <script>
-    window.usuarioActual = <?php echo json_encode($usuario_id); ?>;
-    </script>
 </head>
 <body>
     <?php include 'header.php'; ?>
@@ -99,7 +89,7 @@ $carrito = CarritoDAO::obtenerCarrito($usuario_id);
                 <p>Envío: $<?php echo number_format($envio,2); ?></p>
                 <p>Total: $<?php echo number_format($total,2); ?></p>
                 <form method="post" action="cart.php">
-                    <button type="submit" name="finalizar" class="btn-primary">Finalizar compra</button>
+                    <button type="submit" name="finalizar" class="btn-primary">Comprar carrito</button>
                 </form>
             <?php endif; ?>
         </div>

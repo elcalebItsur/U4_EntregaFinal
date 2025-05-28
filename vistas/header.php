@@ -7,6 +7,7 @@
                 <li><a href="index.php">Inicio</a></li>
                 <li><a href="about.php">Vende</a></li>
                 <li><a href="acerca.php" class="btn-accent">Acerca de</a></li>
+                <li><a href="cart.php"><i class="fas fa-shopping-cart"></i> Carrito</a></li>
                 <?php if (isset($_SESSION['usuario'])): ?>
                     <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'Vendedor'): ?>
                         <li><a href="admin_tienda.php" class="btn-primary">Administrar Tienda</a></li>

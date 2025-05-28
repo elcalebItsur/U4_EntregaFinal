@@ -41,3 +41,20 @@ CREATE TABLE IF NOT EXISTS favoritos (
     producto_id INT REFERENCES productos(id),
     PRIMARY KEY (usuario_id, producto_id)
 );
+
+-- Tabla de ventas
+CREATE TABLE IF NOT EXISTS ventas (
+    id SERIAL PRIMARY KEY,
+    usuario_id INT REFERENCES usuarios(id),
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabla de detalle de venta
+CREATE TABLE IF NOT EXISTS detalle_venta (
+    id SERIAL PRIMARY KEY,
+    venta_id INT REFERENCES ventas(id) ON DELETE CASCADE,
+    producto_id INT REFERENCES productos(id),
+    cantidad INT NOT NULL,
+    precio_unitario NUMERIC(10,2) NOT NULL,
+    vendedor_id INT REFERENCES usuarios(id)
+);

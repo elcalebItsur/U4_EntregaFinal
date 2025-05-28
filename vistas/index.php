@@ -35,96 +35,6 @@ if ($categoriaSeleccionada) {
     <script>
     window.usuarioActual = <?php echo isset($_SESSION['usuario_id']) ? json_encode($_SESSION['usuario_id']) : 'null'; ?>;
     </script>
-    <script>
-    function agregarAlCarrito(id) {
-      if (!window.usuarioActual) {
-        alert('Debes iniciar sesión para agregar productos al carrito.');
-        window.location.href = 'login.php';
-        return;
-      }
-      fetch('cart.php', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: 'agregar=1&productoId=' + encodeURIComponent(id)
-      })
-      .then(r => r.json())
-      .then(data => {
-        if (data.success) {
-          mostrarNotificacion('Producto agregado al carrito');
-          actualizarIconoCarrito();
-          // Notifica a la pestaña del carrito que debe actualizarse
-          if (window.localStorage) {
-            localStorage.setItem('carrito_actualizado', Date.now());
-          }
-          // Si estamos en la página del carrito, actualiza la vista directamente
-          if (window.actualizarCarritoVista) {
-            window.actualizarCarritoVista();
-          }
-        } else {
-          alert(data.error || 'No se pudo agregar al carrito.');
-        }
-      })
-      .catch(() => alert('Error de conexión.'));
-    }
-
-    function mostrarNotificacion(msg) {
-      let notif = document.getElementById('notif-carrito');
-      if (!notif) {
-        notif = document.createElement('div');
-        notif.id = 'notif-carrito';
-        notif.style.position = 'fixed';
-        notif.style.top = '30px';
-        notif.style.right = '30px';
-        notif.style.background = '#44ff99';
-        notif.style.color = '#181818';
-        notif.style.padding = '1rem 2rem';
-        notif.style.borderRadius = '10px';
-        notif.style.fontWeight = 'bold';
-        notif.style.boxShadow = '0 4px 16px #0005';
-        notif.style.zIndex = 9999;
-        notif.style.opacity = 0;
-        notif.style.transition = 'opacity 0.3s, top 0.3s';
-        document.body.appendChild(notif);
-      }
-      notif.textContent = msg;
-      notif.style.opacity = 1;
-      notif.style.top = '30px';
-      setTimeout(() => {
-        notif.style.opacity = 0;
-        notif.style.top = '10px';
-      }, 1200);
-    }
-
-    function actualizarIconoCarrito() {
-      fetch('cart.php?ajax=true')
-        .then(r => r.json())
-        .then(data => {
-          let total = 0;
-          if (Array.isArray(data)) {
-            data.forEach(item => total += parseInt(item.cantidad));
-          }
-          let icon = document.getElementById('cart-count');
-          if (!icon) {
-            const li = document.querySelector('a[href="cart.php"]');
-            if (li) {
-              icon = document.createElement('span');
-              icon.id = 'cart-count';
-              icon.style.background = '#44ff99';
-              icon.style.color = '#181818';
-              icon.style.fontWeight = 'bold';
-              icon.style.fontSize = '0.9rem';
-              icon.style.borderRadius = '50%';
-              icon.style.padding = '2px 8px';
-              icon.style.marginLeft = '6px';
-              icon.style.verticalAlign = 'middle';
-              li.appendChild(icon);
-            }
-          }
-          if (icon) icon.textContent = total > 0 ? total : '';
-        });
-    }
-    document.addEventListener('DOMContentLoaded', actualizarIconoCarrito);
-    </script>
 </head>
 <body>
     <header>
@@ -135,6 +45,7 @@ if ($categoriaSeleccionada) {
                     <li><a href="index.php">Inicio</a></li>
                     <li><a href="about.php">Vende</a></li>
                     <li><a href="acerca.php" class="btn-accent">Acerca de</a></li>
+                    <li><a href="cart.php"><i class="fas fa-shopping-cart"></i> Carrito</a></li>
                     <?php if (isset($_SESSION['usuario'])): ?>
                         <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'Vendedor'): ?>
                             <li><a href="admin_tienda.php" class="btn-primary">Administrar Tienda</a></li>
@@ -224,6 +135,7 @@ if ($categoriaSeleccionada) {
                             <div class="precio">$<?php echo number_format($prod['precio'],2); ?></div>
                             <div class="acciones">
                                 <button class="comprar-ahora" onclick="abrirModalCompra(<?php echo $prod['id']; ?>, '<?php echo htmlspecialchars(addslashes($prod['nombre'])); ?>', <?php echo (int)($prod['stock'] ?? 0); ?>)"><i class="fa fa-bolt"></i> Comprar ahora</button>
+                                <button class="agregar-carrito" onclick="abrirModalCarrito(<?php echo $prod['id']; ?>, '<?php echo htmlspecialchars(addslashes($prod['nombre'])); ?>', <?php echo (int)($prod['stock'] ?? 0); ?>)"><i class="fa fa-cart-plus"></i> Agregar al carrito</button>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -254,6 +166,7 @@ if ($categoriaSeleccionada) {
                             <div class="precio">$<?php echo number_format($prod['precio'],2); ?></div>
                             <div class="acciones">
                                 <button class="comprar-ahora" onclick="abrirModalCompra(<?php echo $prod['id']; ?>, '<?php echo htmlspecialchars(addslashes($prod['nombre'])); ?>', <?php echo (int)($prod['stock'] ?? 0); ?>)"><i class="fa fa-bolt"></i> Comprar ahora</button>
+                                <button class="agregar-carrito" onclick="abrirModalCarrito(<?php echo $prod['id']; ?>, '<?php echo htmlspecialchars(addslashes($prod['nombre'])); ?>', <?php echo (int)($prod['stock'] ?? 0); ?>)"><i class="fa fa-cart-plus"></i> Agregar al carrito</button>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -276,6 +189,18 @@ if ($categoriaSeleccionada) {
         </div>
         <button id="btn-confirmar-compra" class="btn-primary" style="width:100%;margin-top:1rem;">Confirmar compra</button>
         <div id="modal-compra-mensaje" style="margin-top:1rem;font-size:1rem;"></div>
+      </div>
+    </div>
+    <!-- Modal de agregar al carrito -->
+    <div id="modal-carrito" class="modal" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;">
+      <div style="background:#181818;padding:2rem 2.5rem;border-radius:16px;max-width:350px;width:95vw;box-shadow:0 8px 32px #0005;display:flex;flex-direction:column;align-items:center;">
+        <h3 style="color:#44ff99;margin-bottom:1rem;">Agregar al carrito</h3>
+        <div id="modal-carrito-nombre" style="font-weight:600;font-size:1.1rem;margin-bottom:1rem;"></div>
+        <div id="modal-carrito-mensaje" style="color:#e63946;margin-bottom:0.7rem;"></div>
+        <div style="display:flex;gap:1rem;">
+          <button id="btn-confirmar-carrito" class="btn-primary">Agregar</button>
+          <button onclick="document.getElementById('modal-carrito').style.display='none'" class="btn-secondary">Cancelar</button>
+        </div>
       </div>
     </div>
     <script src="../js/index.js"></script>
@@ -336,6 +261,32 @@ if ($categoriaSeleccionada) {
       .finally(() => {
         document.getElementById('btn-confirmar-compra').disabled = false;
       });
+    }
+
+    function abrirModalCarrito(id, nombre, stock) {
+      document.getElementById('modal-carrito').style.display = 'flex';
+      document.getElementById('modal-carrito-nombre').textContent = nombre;
+      document.getElementById('modal-carrito-mensaje').textContent = '';
+      // Reemplaza el botón por un formulario tradicional
+      const modal = document.getElementById('modal-carrito');
+      const formId = 'form-agregar-carrito-modal';
+      let form = document.getElementById(formId);
+      if (form) form.remove();
+      const formHtml = `
+        <form id="${formId}" method="post" action="cart.php" style="display:flex;flex-direction:column;align-items:center;gap:1rem;width:100%;margin-top:1rem;">
+          <input type="hidden" name="agregar" value="1">
+          <input type="hidden" name="productoId" value="${id}">
+          <label for="modal-carrito-cantidad-form">Cantidad:</label>
+          <input type="number" name="cantidad" id="modal-carrito-cantidad-form" value="1" min="1" max="${stock}" style="width:80px;text-align:center;">
+          <div style="display:flex;gap:1rem;justify-content:center;">
+            <button type="submit" class="btn-primary">Agregar</button>
+            <button type="button" onclick="document.getElementById('modal-carrito').style.display='none'" class="btn-secondary">Cancelar</button>
+          </div>
+        </form>`;
+      // Inserta el formulario en el modal
+      const oldBtns = document.getElementById('btn-confirmar-carrito')?.parentNode;
+      if (oldBtns) oldBtns.innerHTML = '';
+      document.getElementById('modal-carrito-mensaje').insertAdjacentHTML('afterend', formHtml);
     }
     </script>
 </body>

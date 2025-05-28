@@ -8,10 +8,15 @@ class VentaDAO {
             $stmt = $pdo->prepare('INSERT INTO ventas (usuario_id, fecha) VALUES (?, NOW()) RETURNING id');
             $stmt->execute([$usuario_id]);
             $venta_id = $stmt->fetchColumn();
-            $detalle = $pdo->prepare('INSERT INTO detalle_venta (venta_id, producto_id, cantidad, precio_unitario) VALUES (?, ?, ?, ?)');
+            $detalle = $pdo->prepare('INSERT INTO detalle_venta (venta_id, producto_id, cantidad, precio_unitario, vendedor_id) VALUES (?, ?, ?, ?, ?)');
             $updateStock = $pdo->prepare('UPDATE productos SET stock = stock - ? WHERE id = ?');
             foreach ($productos as $prod) {
-                $detalle->execute([$venta_id, $prod['producto_id'], $prod['cantidad'], $prod['precio']]);
+                // Obtener vendedor_id del producto
+                $vendedor_id = null;
+                $stmtV = $pdo->prepare('SELECT vendedor_id FROM productos WHERE id = ?');
+                $stmtV->execute([$prod['producto_id']]);
+                $vendedor_id = $stmtV->fetchColumn();
+                $detalle->execute([$venta_id, $prod['producto_id'], $prod['cantidad'], $prod['precio'], $vendedor_id]);
                 $updateStock->execute([$prod['cantidad'], $prod['producto_id']]);
             }
             $pdo->commit();
