@@ -55,7 +55,7 @@ foreach ($favoritos_ids as $pid) {
 <body>
     <?php include 'header.php'; ?>
     <main class="favoritos-container">
-        <h2 style="color:#44ff99;text-align:center;margin-bottom:2rem;">Tus Favoritos</h2>
+        <h2 class="section-title">Tus Favoritos</h2>
         <div id="favoritos-lista" class="productos-grid">
             <?php if (empty($favoritos)): ?>
                 <p>No tienes productos favoritos.</p>

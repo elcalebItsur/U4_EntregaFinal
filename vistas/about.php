@@ -8,18 +8,7 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vende con Nosotros - Textisur</title>
     <link rel="stylesheet" href="../css/main.css" />
-    <style>
-        header { background: #181818; box-shadow: none; border-bottom: 1.5px solid #232323; }
-        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 1.2rem 2rem; }
-        .logo { font-size:2rem; color:#44ff99; font-weight:700; letter-spacing:1px; cursor:pointer; margin-right:2rem; }
-        nav ul { display: flex; gap: 1.2rem; align-items: center; list-style: none; }
-        nav ul li { display: flex; align-items: center; }
-        nav ul li a, nav ul li span { font-size: 1rem; }
-        .vender-main { max-width: 700px; margin: 2.5rem auto; background: #1e1e1e; border-radius: 14px; padding: 2.5rem 2rem; box-shadow: 0 4px 16px #0002; }
-        .vender-main h2 { color: #44ff99; text-align: center; margin-bottom: 1.5rem; }
-        .vender-main ol { margin: 1.5rem 0; }
-        .vender-main a.btn-primary { display: block; margin: 2rem auto 0 auto; max-width: 300px; }
-    </style>
+    <link rel="stylesheet" href="../css/about.css" />
 </head>
 <body>
     <header>
@@ -57,20 +46,20 @@ session_start();
         </div>
     </header>
     <?php if (isset($_SESSION['usuario'])): ?>
-    <div id="user-modal" class="user-modal" style="display:none;">
+    <div id="user-modal" class="user-modal">
         <div class="user-modal-content">
             <button class="user-modal-close">&times;</button>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;">
+            <div class="user-modal-avatar-group">
                 <?php if ($foto): ?>
-                    <img src="../assets/images/<?php echo htmlspecialchars($foto); ?>" alt="Perfil" style="width:80px;height:80px;border-radius:50%;object-fit:cover;box-shadow:0 2px 8px #0003;" />
+                    <img src="../assets/images/<?php echo htmlspecialchars($foto); ?>" alt="Perfil" class="user-modal-avatar" />
                 <?php else: ?>
-                    <div style="width:80px;height:80px;border-radius:50%;background:#44ff99;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#181818;font-size:2.2rem;">
+                    <div class="avatar-inicial user-modal-avatar">
                         <?php echo strtoupper(substr($_SESSION['usuario'],0,1)); ?>
                     </div>
                 <?php endif; ?>
-                <div style="text-align:center;">
-                    <div style="font-size:1.2rem;font-weight:600;"> <?php echo htmlspecialchars($_SESSION['usuario']); ?> </div>
-                    <div style="color:#aaa;font-size:0.98rem;"> <?php echo htmlspecialchars($_SESSION['email']); ?> </div>
+                <div class="user-modal-info">
+                    <div class="user-modal-title"> <?php echo htmlspecialchars($_SESSION['usuario']); ?> </div>
+                    <div class="user-modal-email"> <?php echo htmlspecialchars($_SESSION['email']); ?> </div>
                 </div>
             </div>
             <ul class="user-menu-list">

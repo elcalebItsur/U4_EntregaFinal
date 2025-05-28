@@ -20,57 +20,7 @@ if ($usuario['tipo'] === 'Vendedor') {
     <title>Perfil de <?php echo htmlspecialchars($usuario['nombre']); ?></title>
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/home.css" />
-    <style>
-        .perfil-main { max-width: 900px; margin: 2.5rem auto; background: #1e1e1e; border-radius: 14px; padding: 2.5rem 2rem; box-shadow: 0 4px 16px #0002; animation: fadeInUp 0.7s cubic-bezier(.4,2,.3,1); }
-        .perfil-header { display: flex; align-items: center; gap: 2rem; margin-bottom: 2.5rem; }
-        .perfil-avatar {
-            width: 70px;
-            height: 70px;
-            max-width: 70px;
-            max-height: 70px;
-            min-width: 70px;
-            min-height: 70px;
-            border-radius: 50%;
-            background: #44ff99;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: #181818;
-            font-weight: bold;
-            box-shadow: 0 2px 8px #0003;
-        }
-        .perfil-avatar img {
-            width: 70px;
-            height: 70px;
-            max-width: 70px;
-            max-height: 70px;
-            min-width: 70px;
-            min-height: 70px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        @media (max-width: 600px) {
-            .perfil-header { flex-direction: column; gap: 1rem; }
-            .perfil-avatar, .perfil-avatar img {
-                width: 55px;
-                height: 55px;
-                max-width: 55px;
-                max-height: 55px;
-                min-width: 55px;
-                min-height: 55px;
-            }
-        }
-        .perfil-info { flex:1; }
-        .perfil-info h2 { color: #44ff99; margin-bottom: 0.5rem; }
-        .perfil-info p { color: #aaa; margin-bottom: 0.2rem; }
-        .productos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-        .producto-card { background: #232323; border-radius: 12px; padding: 1.2rem; box-shadow: 0 2px 8px #0002; display: flex; flex-direction: column; align-items: center; transition: box-shadow 0.2s; }
-        .producto-card img { width: 100%; max-width: 180px; border-radius: 8px; margin-bottom: 1rem; aspect-ratio: 1/1; object-fit: cover; }
-        .producto-card h3 { color: #fff; margin-bottom: 0.5rem; font-size: 1.1rem; }
-        .producto-card .precio { color: #44ff99; font-weight: bold; margin-bottom: 0.5rem; }
-        .producto-card p { color: #b0b0b0; font-size: 0.98rem; margin-bottom: 0.5rem; }
-    </style>
+    <link rel="stylesheet" href="../css/ver_perfil.css" />
 </head>
 <body>
 <header>
@@ -129,7 +79,7 @@ if ($usuario['tipo'] === 'Vendedor') {
         </div>
     </div>
     <?php if ($usuario['tipo'] === 'Vendedor'): ?>
-        <h3 style="color:#eab308;margin-bottom:1rem;">Mis productos</h3>
+        <h3 class="user-modal-warning">Mis productos</h3>
         <div class="productos-grid">
             <?php foreach ($productos as $prod): ?>
                 <div class="producto-card">
@@ -143,10 +93,12 @@ if ($usuario['tipo'] === 'Vendedor') {
                     <h3><?php echo htmlspecialchars($prod['nombre']); ?></h3>
                     <p><?php echo htmlspecialchars($prod['descripcion']); ?></p>
                     <div class="precio">$<?php echo number_format($prod['precio'],2); ?></div>
-                    <div style="color:#eab308;font-size:0.95rem;">Stock: <?php echo htmlspecialchars($prod['stock']); ?></div>
+                    <div class="stock-label">Stock: <?php echo htmlspecialchars($prod['stock']); ?></div>
                 </div>
             <?php endforeach; ?>
         </div>
+    <?php else: ?>
+        <div class="user-modal-warning">No hay productos para mostrar.</div>
     <?php endif; ?>
 </main>
 <footer>

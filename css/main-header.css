@@ -8,13 +8,14 @@ nav ul li a, nav ul li span { font-size: 1rem; }
 .user-avatar-btn img, .user-avatar-btn .avatar-inicial { width:42px; height:42px; border-radius:50%; object-fit:cover; box-shadow:0 2px 8px #0003; }
 .user-avatar-btn .avatar-inicial { background:#44ff99; display:flex; align-items:center; justify-content:center; font-weight:bold; color:#181818; font-size:1.2rem; }
 
-.user-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 2000; animation: fadeIn 0.2s; }
+.user-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 2000; animation: fadeIn 0.2s; }
 .user-modal-content { background: #232323; color: #fff; border-radius: 14px; padding: 2rem 2.5rem; min-width: 350px; max-width: 95vw; box-shadow: 0 8px 32px #0005; position: relative; display: flex; flex-direction: column; align-items: center; animation: fadeInUp 0.4s cubic-bezier(.4,2,.3,1); }
 .user-modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: #ff6b6b; font-size: 2rem; cursor: pointer; }
 .user-menu-list { list-style: none; padding: 0; margin: 2rem 0 0 0; width: 100%; }
 .user-menu-list li { margin-bottom: 1rem; }
 .user-menu-list a { color: #44ff99; text-decoration: none; font-size: 1.1rem; display: flex; align-items: center; gap: 0.7rem; transition: color 0.2s; }
 .user-menu-list a:hover { color: #eab308; }
+.chevron-icon { font-size: 0.8rem; }
 
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

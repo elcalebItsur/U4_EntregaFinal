@@ -30,11 +30,13 @@ if ($categoriaSeleccionada) {
     <link rel="stylesheet" href="../css/index.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <link rel="stylesheet" href="../css/main-header.css" />
+    <link rel="stylesheet" href="../css/modales.css" />
     <script src="../js/index.js" defer></script>
     <script src="../js/main-header.js" defer></script>
     <script>
-    window.usuarioActual = <?php echo isset($_SESSION['usuario_id']) ? json_encode($_SESSION['usuario_id']) : 'null'; ?>;
+      window.usuarioActual = <?php echo isset($_SESSION['usuario_id']) ? json_encode($_SESSION['usuario_id']) : 'null'; ?>;
     </script>
+    <script src="../js/modales.js" defer></script>
 </head>
 <body>
     <header>
@@ -55,9 +57,11 @@ if ($categoriaSeleccionada) {
                                 <?php
                                 $foto = $stmt->fetchColumn();
                                 if ($foto): ?>
-                                    <img src="../assets/images/<?php echo htmlspecialchars($foto); ?>" alt="Perfil" />
+                                    <img src="../assets/images/<?php echo htmlspecialchars($foto); ?>" alt="Perfil" class="user-modal-avatar" />
                                 <?php else: ?>
-                                    <span class="avatar-inicial"><?php echo strtoupper(substr($_SESSION['usuario'],0,1)); ?></span>
+                                    <div class="avatar-inicial user-modal-avatar">
+                                        <?php echo strtoupper(substr($_SESSION['usuario'],0,1)); ?>
+                                    </div>
                                 <?php endif; ?>
                             </button>
                         </li>
@@ -70,20 +74,20 @@ if ($categoriaSeleccionada) {
         </div>
     </header>
     <?php if (isset($_SESSION['usuario'])): ?>
-    <div id="user-modal" class="user-modal" style="display:none;">
+    <div id="user-modal" class="user-modal">
         <div class="user-modal-content">
             <button class="user-modal-close">&times;</button>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;">
+            <div class="user-modal-avatar-group">
                 <?php if ($foto): ?>
-                    <img src="../assets/images/<?php echo htmlspecialchars($foto); ?>" alt="Perfil" style="width:80px;height:80px;border-radius:50%;object-fit:cover;box-shadow:0 2px 8px #0003;" />
+                    <img src="../assets/images/<?php echo htmlspecialchars($foto); ?>" alt="Perfil" class="user-modal-avatar" />
                 <?php else: ?>
-                    <div style="width:80px;height:80px;border-radius:50%;background:#44ff99;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#181818;font-size:2.2rem;">
+                    <div class="avatar-inicial user-modal-avatar">
                         <?php echo strtoupper(substr($_SESSION['usuario'],0,1)); ?>
                     </div>
                 <?php endif; ?>
-                <div style="text-align:center;">
-                    <div style="font-size:1.2rem;font-weight:600;"> <?php echo htmlspecialchars($_SESSION['usuario']); ?> </div>
-                    <div style="color:#aaa;font-size:0.98rem;"> <?php echo htmlspecialchars($_SESSION['email']); ?> </div>
+                <div class="user-modal-info">
+                    <div class="user-modal-title"> <?php echo htmlspecialchars($_SESSION['usuario']); ?> </div>
+                    <div class="user-modal-email"> <?php echo htmlspecialchars($_SESSION['email']); ?> </div>
                 </div>
             </div>
             <ul class="user-menu-list">
@@ -94,7 +98,7 @@ if ($categoriaSeleccionada) {
         </div>
     </div>
     <?php endif; ?>
-    <main style="max-width: 1200px; margin: 0 auto;">
+    <main class="main-container">
         <section class="hero">
             <div class="hero-text">
                 <h2>Descubre tu estilo único</h2>
@@ -106,7 +110,7 @@ if ($categoriaSeleccionada) {
             </div>
         </section>
         <section class="categorias">
-            <h2 style="color:#44ff99;">Categorías</h2>
+            <h2 class="section-title">Categorías</h2>
             <div class="grid">
                 <div class="card" onclick="window.location.href='index.php?categoria=Hombre'"><i class="fa fa-mars"></i><span>Hombre</span></div>
                 <div class="card" onclick="window.location.href='index.php?categoria=Mujer'"><i class="fa fa-venus"></i><span>Mujer</span></div>
@@ -119,17 +123,17 @@ if ($categoriaSeleccionada) {
             </div>
         </section>
         <section class="populares" id="populares">
-            <h2 style="color:#44ff99;"><?php echo $categoriaSeleccionada ? 'Productos de ' . htmlspecialchars($categoriaSeleccionada) : 'Más Populares'; ?></h2>
+            <h2 class="section-title"><?php echo $categoriaSeleccionada ? 'Productos de ' . htmlspecialchars($categoriaSeleccionada) : 'Más Populares'; ?></h2>
             <div class="productos-grid">
                 <?php if (empty($productos)): ?>
-                    <div style="color:#eab308;font-size:1.2rem;">No hay productos para mostrar.</div>
+                    <div class="user-modal-warning">No hay productos para mostrar.</div>
                 <?php else: ?>
                     <?php foreach ($productos as $prod): ?>
                         <div class="producto-card">
                             <img src="../assets/images/<?php echo htmlspecialchars($prod['imagen'] ?? 'hero_image.jpg'); ?>" alt="<?php echo htmlspecialchars($prod['nombre']); ?>" onerror="this.src='../assets/images/hero_image.jpg'">
                             <h3><?php echo htmlspecialchars($prod['nombre']); ?></h3>
                             <?php if (!empty($prod['nombre_tienda'])): ?>
-                                <div style="color:#eab308;font-size:0.98rem;margin-bottom:0.2rem;text-align:center;">Tienda: <?php echo htmlspecialchars($prod['nombre_tienda']); ?></div>
+                                <div class="user-modal-tienda">Tienda: <?php echo htmlspecialchars($prod['nombre_tienda']); ?></div>
                             <?php endif; ?>
                             <p><?php echo htmlspecialchars($prod['descripcion'] ?? ''); ?></p>
                             <div class="precio">$<?php echo number_format($prod['precio'],2); ?></div>
@@ -148,19 +152,19 @@ if ($categoriaSeleccionada) {
             <a href="about.php" class="btn-primary">Comienza Ahora</a>
         </section>
         <section class="todos-productos" id="todos-productos">
-            <h2 style="color:#44ff99;">Todos los productos disponibles</h2>
+            <h2 class="section-title">Todos los productos disponibles</h2>
             <div class="productos-grid">
                 <?php 
                 $todos = ProductoDAO::obtenerTodos();
                 if (empty($todos)): ?>
-                    <div style="color:#eab308;font-size:1.2rem;">No hay productos para mostrar.</div>
+                    <div class="user-modal-warning">No hay productos para mostrar.</div>
                 <?php else: ?>
                     <?php foreach ($todos as $prod): ?>
                         <div class="producto-card">
                             <img src="../assets/images/<?php echo htmlspecialchars($prod['imagen'] ?? 'hero_image.jpg'); ?>" alt="<?php echo htmlspecialchars($prod['nombre']); ?>" onerror="this.src='../assets/images/hero_image.jpg'">
                             <h3><?php echo htmlspecialchars($prod['nombre']); ?></h3>
                             <?php if (!empty($prod['nombre_tienda'])): ?>
-                                <div style="color:#eab308;font-size:0.98rem;margin-bottom:0.2rem;text-align:center;">Tienda: <?php echo htmlspecialchars($prod['nombre_tienda']); ?></div>
+                                <div class="user-modal-tienda">Tienda: <?php echo htmlspecialchars($prod['nombre_tienda']); ?></div>
                             <?php endif; ?>
                             <p><?php echo htmlspecialchars($prod['descripcion'] ?? ''); ?></p>
                             <div class="precio">$<?php echo number_format($prod['precio'],2); ?></div>
@@ -178,116 +182,30 @@ if ($categoriaSeleccionada) {
         <p>&copy; 2025 TEXTISUR. Todos los derechos reservados.</p>
     </footer>
     <!-- Modal de compra -->
-    <div id="modal-compra" class="modal" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;">
-      <div class="modal-content" style="background:#232323;padding:2rem 2.5rem;border-radius:14px;max-width:350px;width:100%;text-align:center;position:relative;">
-        <button id="cerrar-modal-compra" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.3rem;color:#aaa;cursor:pointer;">&times;</button>
-        <h3 style="color:#44ff99;">Comprar <span id="modal-nombre-producto"></span></h3>
-        <div style="margin:1rem 0;">
+    <div id="modal-compra" class="modal">
+      <div class="modal-content">
+        <button id="cerrar-modal-compra">&times;</button>
+        <h3>Comprar <span id="modal-nombre-producto"></span></h3>
+        <div class="modal-margin">
           <label for="modal-cantidad-compra">Cantidad:</label>
-          <input type="number" id="modal-cantidad-compra" min="1" value="1" style="width:60px;text-align:center;">
-          <div id="modal-stock-info" style="color:#eab308;font-size:0.95rem;margin-top:0.3rem;"></div>
+          <input type="number" id="modal-cantidad-compra" min="1" value="1">
+          <div id="modal-stock-info"></div>
         </div>
-        <button id="btn-confirmar-compra" class="btn-primary" style="width:100%;margin-top:1rem;">Confirmar compra</button>
-        <div id="modal-compra-mensaje" style="margin-top:1rem;font-size:1rem;"></div>
+        <button id="btn-confirmar-compra" class="btn-primary">Confirmar compra</button>
+        <div id="modal-compra-mensaje"></div>
       </div>
     </div>
     <!-- Modal de agregar al carrito -->
-    <div id="modal-carrito" class="modal" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;">
-      <div style="background:#181818;padding:2rem 2.5rem;border-radius:16px;max-width:350px;width:95vw;box-shadow:0 8px 32px #0005;display:flex;flex-direction:column;align-items:center;">
-        <h3 style="color:#44ff99;margin-bottom:1rem;">Agregar al carrito</h3>
-        <div id="modal-carrito-nombre" style="font-weight:600;font-size:1.1rem;margin-bottom:1rem;"></div>
-        <div id="modal-carrito-mensaje" style="color:#e63946;margin-bottom:0.7rem;"></div>
-        <div style="display:flex;gap:1rem;">
+    <div id="modal-carrito" class="modal">
+      <div>
+        <h3>Agregar al carrito</h3>
+        <div id="modal-carrito-nombre"></div>
+        <div id="modal-carrito-mensaje"></div>
+        <div class="modal-btn-group">
           <button id="btn-confirmar-carrito" class="btn-primary">Agregar</button>
           <button onclick="document.getElementById('modal-carrito').style.display='none'" class="btn-secondary">Cancelar</button>
         </div>
       </div>
     </div>
-    <script src="../js/index.js"></script>
-    <script>
-    function abrirModalCompra(id, nombre, stock) {
-      if (!window.usuarioActual) {
-        alert('Necesitas iniciar sesión para hacer una compra.');
-        return;
-      }
-      document.getElementById('modal-compra').style.display = 'flex';
-      document.getElementById('modal-nombre-producto').textContent = nombre;
-      document.getElementById('modal-cantidad-compra').value = 1;
-      document.getElementById('modal-cantidad-compra').max = stock;
-      document.getElementById('modal-stock-info').textContent = 'Stock disponible: ' + stock;
-      document.getElementById('modal-compra-mensaje').textContent = '';
-      document.getElementById('btn-confirmar-compra').onclick = function() {
-        confirmarCompra(id, stock);
-      };
-    }
-    document.getElementById('cerrar-modal-compra').onclick = function() {
-      document.getElementById('modal-compra').style.display = 'none';
-    };
-    window.onclick = function(event) {
-      var modal = document.getElementById('modal-compra');
-      if (event.target === modal) modal.style.display = 'none';
-    };
-    function confirmarCompra(id, stock) {
-      var cantidad = parseInt(document.getElementById('modal-cantidad-compra').value);
-      if (isNaN(cantidad) || cantidad < 1) {
-        document.getElementById('modal-compra-mensaje').textContent = 'Cantidad inválida.';
-        return;
-      }
-      if (cantidad > stock) {
-        document.getElementById('modal-compra-mensaje').textContent = 'No hay suficiente stock disponible.';
-        return;
-      }
-      document.getElementById('btn-confirmar-compra').disabled = true;
-      fetch('comprar.php', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: 'producto_id=' + encodeURIComponent(id) + '&cantidad=' + encodeURIComponent(cantidad)
-      })
-      .then(r => r.json())
-      .then(data => {
-        if (data.success) {
-          document.getElementById('modal-compra-mensaje').textContent = 'COMPRA REALIZADA CORRECTAMENTE';
-          setTimeout(() => {
-            document.getElementById('modal-compra').style.display = 'none';
-            window.location.href = 'mis_compras.php';
-          }, 1200);
-        } else {
-          document.getElementById('modal-compra-mensaje').textContent = data.error || 'Error al comprar.';
-        }
-      })
-      .catch(() => {
-        document.getElementById('modal-compra-mensaje').textContent = 'Error de conexión.';
-      })
-      .finally(() => {
-        document.getElementById('btn-confirmar-compra').disabled = false;
-      });
-    }
-
-    function abrirModalCarrito(id, nombre, stock) {
-      document.getElementById('modal-carrito').style.display = 'flex';
-      document.getElementById('modal-carrito-nombre').textContent = nombre;
-      document.getElementById('modal-carrito-mensaje').textContent = '';
-      // Reemplaza el botón por un formulario tradicional
-      const modal = document.getElementById('modal-carrito');
-      const formId = 'form-agregar-carrito-modal';
-      let form = document.getElementById(formId);
-      if (form) form.remove();
-      const formHtml = `
-        <form id="${formId}" method="post" action="cart.php" style="display:flex;flex-direction:column;align-items:center;gap:1rem;width:100%;margin-top:1rem;">
-          <input type="hidden" name="agregar" value="1">
-          <input type="hidden" name="productoId" value="${id}">
-          <label for="modal-carrito-cantidad-form">Cantidad:</label>
-          <input type="number" name="cantidad" id="modal-carrito-cantidad-form" value="1" min="1" max="${stock}" style="width:80px;text-align:center;">
-          <div style="display:flex;gap:1rem;justify-content:center;">
-            <button type="submit" class="btn-primary">Agregar</button>
-            <button type="button" onclick="document.getElementById('modal-carrito').style.display='none'" class="btn-secondary">Cancelar</button>
-          </div>
-        </form>`;
-      // Inserta el formulario en el modal
-      const oldBtns = document.getElementById('btn-confirmar-carrito')?.parentNode;
-      if (oldBtns) oldBtns.innerHTML = '';
-      document.getElementById('modal-carrito-mensaje').insertAdjacentHTML('afterend', formHtml);
-    }
-    </script>
 </body>
 </html>

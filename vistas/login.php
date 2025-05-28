@@ -32,15 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Iniciar Sesión - Textisur</title>
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/auth.css" />
+    <link rel="stylesheet" href="../css/login.css" />
     <script src="../js/login.js" defer></script>
-    <style>
-        header { background: #181818; box-shadow: none; border-bottom: 1.5px solid #232323; }
-        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 1.2rem 2rem; }
-        .logo { font-size:2rem; color:#44ff99; font-weight:700; letter-spacing:1px; cursor:pointer; margin-right:2rem; }
-        nav ul { display: flex; gap: 1.2rem; align-items: center; list-style: none; }
-        nav ul li { display: flex; align-items: center; }
-        nav ul li a, nav ul li span { font-size: 1rem; }
-    </style>
+    <script src="../js/login-menu.js" defer></script>
 </head>
 <body>
     <header>
@@ -59,12 +53,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <button class="user-btn" id="user-menu-btn">
                                 <i class="fas fa-user-circle"></i>
                                 <?php echo htmlspecialchars($_SESSION['usuario']); ?>
-                                <i class="fas fa-chevron-down" style="font-size:0.8rem;"></i>
+                                <i class="fas fa-chevron-down chevron-icon"></i>
                             </button>
                             <div class="user-dropdown" id="user-dropdown">
                                 <div class="user-info">
                                     <?php echo htmlspecialchars($_SESSION['usuario']); ?>
-                                    <small style="display:block;color:#aaa;"> <?php echo htmlspecialchars($_SESSION['email']); ?> </small>
+                                    <small class="user-email"> <?php echo htmlspecialchars($_SESSION['email']); ?> </small>
                                 </div>
                                 <a href="perfil.php"><i class="fas fa-user"></i> Mi perfil</a>
                                 <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'Vendedor'): ?>
@@ -87,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <main class="auth-container">
         <h2>Inicia Sesión</h2>
         <?php if (isset($mensaje)): ?>
-            <div style="background:#232323;color:#ff6b6b;padding:1rem;border-radius:8px;margin-bottom:1rem;text-align:center;">
+            <div class="login-error">
                 <?php echo htmlspecialchars($mensaje); ?>
             </div>
         <?php endif; ?>
@@ -103,24 +97,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <footer>
         <p>&copy; 2025 TEXTISUR. Todos los derechos reservados.</p>
     </footer>
-    <script>
-    // Control del menú de usuario
-    document.addEventListener('DOMContentLoaded', function() {
-        const userBtn = document.getElementById('user-menu-btn');
-        const userDropdown = document.getElementById('user-dropdown');
-        
-        if (userBtn && userDropdown) {
-            userBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                userDropdown.classList.toggle('show');
-            });
-            
-            // Cerrar al hacer clic fuera
-            document.addEventListener('click', function() {
-                userDropdown.classList.remove('show');
-            });
-        }
-    });
-    </script>
 </body>
 </html>

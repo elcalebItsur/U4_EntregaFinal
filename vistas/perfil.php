@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <?php endif; ?>
                         </span>
                         <?php echo htmlspecialchars($_SESSION['usuario']); ?>
-                        <i class="fas fa-chevron-down" style="font-size:0.8rem;"></i>
+                        <i class="fas fa-chevron-down chevron-icon"></i>
                     </button>
                     <div class="user-dropdown" id="user-dropdown">
                         <div class="user-info">
@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <?php endif; ?>
                             </span>
                             <?php echo htmlspecialchars($_SESSION['usuario']); ?>
-                            <small style="display:block;color:#aaa;"> <?php echo htmlspecialchars($_SESSION['email']); ?> </small>
+                            <small class="user-email"> <?php echo htmlspecialchars($_SESSION['email']); ?> </small>
                         </div>
                         <a href="perfil.php"><i class="fas fa-user"></i> Mi perfil</a>
                         <?php if ($_SESSION['tipo'] === 'Vendedor'): ?>
@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="form-group full-width">
                 <label>Acerca de mí</label>
-                <textarea name="bio" rows="3" disabled style="resize:vertical;">(Próximamente)</textarea>
+                <textarea name="bio" rows="3" disabled class="bio-textarea">(Próximamente)</textarea>
             </div>
             <div class="form-group full-width">
                 <label>Cambiar foto de perfil</label>

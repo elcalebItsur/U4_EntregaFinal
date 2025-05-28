@@ -5,20 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Acerca de Textisur</title>
 	<link rel="stylesheet" href="../css/main.css" />
-	<style>
-		.acerca-main {
-			max-width: 800px;
-			margin: 3rem auto;
-			background: #1e1e1e;
-			border-radius: 14px;
-			padding: 2.5rem 2rem;
-			box-shadow: 0 4px 16px #0002;
-			animation: fadeInUp 0.7s cubic-bezier(.4,2,.3,1);
-		}
-		.acerca-main h2 { color: #44ff99; text-align: center; margin-bottom: 1.5rem; }
-		.acerca-main p { margin-bottom: 1.2rem; color: #e0e0e0; font-size: 1.1rem; }
-		.acerca-main ul { margin: 1.5rem 0 0 1.5rem; color: #eab308; }
-	</style>
+	<link rel="stylesheet" href="../css/acerca.css" />
 </head>
 <body>
 	<!-- Reemplazar solo la parte del header (desde <header> hasta </header>) con este código: -->

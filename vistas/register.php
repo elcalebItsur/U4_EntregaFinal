@@ -58,15 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Registro - Textisur</title>
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/auth.css" />
+    <link rel="stylesheet" href="../css/register.css" />
     <script src="../js/register.js" defer></script>
-    <style>
-        header { background: #181818; box-shadow: none; border-bottom: 1.5px solid #232323; }
-        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 1.2rem 2rem; }
-        .logo { font-size:2rem; color:#44ff99; font-weight:700; letter-spacing:1px; cursor:pointer; margin-right:2rem; }
-        nav ul { display: flex; gap: 1.2rem; align-items: center; list-style: none; }
-        nav ul li { display: flex; align-items: center; }
-        nav ul li a, nav ul li span { font-size: 1rem; }
-    </style>
+    <script src="../js/register-menu.js" defer></script>
 </head>
 <body>
     <!-- Reemplazar solo la parte del header (desde <header> hasta </header>) con este código: -->
@@ -86,12 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <button class="user-btn" id="user-menu-btn">
                             <i class="fas fa-user-circle"></i>
                             <?php echo htmlspecialchars($_SESSION['usuario']); ?>
-                            <i class="fas fa-chevron-down" style="font-size:0.8rem;"></i>
+                            <i class="fas fa-chevron-down chevron-icon"></i>
                         </button>
                         <div class="user-dropdown" id="user-dropdown">
                             <div class="user-info">
                                 <?php echo htmlspecialchars($_SESSION['usuario']); ?>
-                                <small style="display:block;color:#aaa;"> <?php echo htmlspecialchars($_SESSION['email']); ?> </small>
+                                <small class="user-email"> <?php echo htmlspecialchars($_SESSION['email']); ?> </small>
                             </div>
                             <a href="perfil.php"><i class="fas fa-user"></i> Mi perfil</a>
                             <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'Vendedor'): ?>
@@ -114,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <main class="auth-container">
         <h2>Crea tu cuenta</h2>
         <?php if (isset($mensaje)): ?>
-            <div style="background:#232323;color:#44ff99;padding:1rem;border-radius:8px;margin-bottom:1rem;text-align:center;">
+            <div class="register-success">
                 <?php echo htmlspecialchars($mensaje); ?>
             </div>
         <?php endif; ?>
@@ -141,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <option value="Comprador">Comprador</option>
                 <option value="Vendedor">Vendedor</option>
             </select>
-            <div id="campos-vendedor" style="display:none">
+            <div id="campos-vendedor" class="campos-vendedor-hidden">
                 <label>Nombre de tienda:</label>
                 <input type="text" name="nombre_tienda" id="nombre_tienda" />
                 <label>RFC:</label>

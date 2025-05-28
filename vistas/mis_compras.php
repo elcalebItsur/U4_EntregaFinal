@@ -14,12 +14,7 @@ $ventas = VentaDAO::obtenerVentasPorUsuario($usuario_id);
     <meta charset="UTF-8" />
     <title>Mis Compras</title>
     <link rel="stylesheet" href="../css/main.css" />
-    <style>
-        .ventas-table { width:100%; border-collapse:collapse; margin-top:2rem; }
-        .ventas-table th, .ventas-table td { border:1px solid #333; padding:0.7rem; text-align:center; }
-        .ventas-table th { background:#232323; color:#44ff99; }
-        .ventas-table tr:nth-child(even) { background:#232323; }
-    </style>
+    <link rel="stylesheet" href="../css/mis_compras.css" />
 </head>
 <body>
     <header>
@@ -27,10 +22,10 @@ $ventas = VentaDAO::obtenerVentasPorUsuario($usuario_id);
             <h1 class="logo" onclick="location.href='index.php'">Textisur</h1>
         </div>
     </header>
-    <main style="max-width:900px;margin:2rem auto;">
-        <h2 style="color:#44ff99;">Mis Compras</h2>
+    <main class="main-container">
+        <h2 class="section-title">Mis Compras</h2>
         <?php if (empty($ventas)): ?>
-            <div style="color:#eab308;">No tienes compras registradas.</div>
+            <div class="warning-label">No tienes compras registradas.</div>
         <?php else: ?>
         <table class="ventas-table">
             <thead>
@@ -62,5 +57,8 @@ $ventas = VentaDAO::obtenerVentasPorUsuario($usuario_id);
         </table>
         <?php endif; ?>
     </main>
+    <div style="text-align:center; margin: 2rem 0;">
+        <a href="index.php" class="btn-primary" style="padding:0.7rem 2rem; font-size:1.1rem; border-radius:8px; text-decoration:none;">Seguir comprando</a>
+    </div>
 </body>
 </html>

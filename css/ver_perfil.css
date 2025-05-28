@@ -1,0 +1,57 @@
+.perfil-main { max-width: 900px; margin: 2.5rem auto; background: #1e1e1e; border-radius: 14px; padding: 2.5rem 2rem; box-shadow: 0 4px 16px #0002; animation: fadeInUp 0.7s cubic-bezier(.4,2,.3,1); }
+.perfil-header { display: flex; align-items: center; gap: 2rem; margin-bottom: 2.5rem; }
+.perfil-avatar {
+    width: 70px;
+    height: 70px;
+    max-width: 70px;
+    max-height: 70px;
+    min-width: 70px;
+    min-height: 70px;
+    border-radius: 50%;
+    background: #44ff99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #181818;
+    font-weight: bold;
+    box-shadow: 0 2px 8px #0003;
+}
+.perfil-avatar img {
+    width: 70px;
+    height: 70px;
+    max-width: 70px;
+    max-height: 70px;
+    min-width: 70px;
+    min-height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+@media (max-width: 600px) {
+    .perfil-header { flex-direction: column; gap: 1rem; }
+    .perfil-avatar, .perfil-avatar img {
+        width: 55px;
+        height: 55px;
+        max-width: 55px;
+        max-height: 55px;
+        min-width: 55px;
+        min-height: 55px;
+    }
+}
+.perfil-info { flex:1; }
+.perfil-info h2 { color: #44ff99; margin-bottom: 0.5rem; }
+.perfil-info p { color: #aaa; margin-bottom: 0.2rem; }
+.productos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+.producto-card { background: #232323; border-radius: 12px; padding: 1.2rem; box-shadow: 0 2px 8px #0002; display: flex; flex-direction: column; align-items: center; transition: box-shadow 0.2s; }
+.producto-card img { width: 100%; max-width: 180px; border-radius: 8px; margin-bottom: 1rem; aspect-ratio: 1/1; object-fit: cover; }
+.producto-card h3 { color: #fff; margin-bottom: 0.5rem; font-size: 1.1rem; }
+.producto-card .precio { color: #44ff99; font-weight: bold; margin-bottom: 0.5rem; }
+.producto-card p { color: #b0b0b0; font-size: 0.98rem; margin-bottom: 0.5rem; }
+.stock-label {
+    color: #eab308;
+    font-size: 0.95rem;
+}
+.user-modal-warning {
+    color: #eab308;
+    font-size: 1.2rem;
+}

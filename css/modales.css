@@ -1,0 +1,87 @@
+/* Estilos para los modales de compra y carrito extraídos de inline */
+#modal-compra, #modal-carrito {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  align-items: center;
+  justify-content: center;
+}
+#modal-compra .modal-content {
+  background: #232323;
+  padding: 2rem 2.5rem;
+  border-radius: 14px;
+  max-width: 350px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+}
+#cerrar-modal-compra {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  color: #aaa;
+  cursor: pointer;
+}
+#modal-compra h3, #modal-carrito h3 {
+  color: #44ff99;
+}
+#modal-compra #modal-stock-info {
+  color: #eab308;
+  font-size: 0.95rem;
+  margin-top: 0.3rem;
+}
+#modal-compra #btn-confirmar-compra {
+  width: 100%;
+  margin-top: 1rem;
+}
+#modal-compra #modal-compra-mensaje {
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+#modal-carrito > div {
+  background: #181818;
+  padding: 2rem 2.5rem;
+  border-radius: 16px;
+  max-width: 350px;
+  width: 95vw;
+  box-shadow: 0 8px 32px #0005;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#modal-carrito-nombre {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+#modal-carrito-mensaje {
+  color: #e63946;
+  margin-bottom: 0.7rem;
+}
+#modal-carrito .btn-primary, #modal-carrito .btn-secondary {
+  /* Hereda estilos de botones globales */
+}
+#modal-carrito form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+#modal-carrito form input[type="number"] {
+  width: 80px;
+  text-align: center;
+}
+#modal-compra input[type="number"] {
+  width: 60px;
+  text-align: center;
+}

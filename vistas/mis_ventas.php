@@ -14,12 +14,7 @@ $ventas = VentaDAO::obtenerVentasPorVendedor($vendedor_id);
     <meta charset="UTF-8" />
     <title>Mis Ventas</title>
     <link rel="stylesheet" href="../css/main.css" />
-    <style>
-        .ventas-table { width:100%; border-collapse:collapse; margin-top:2rem; }
-        .ventas-table th, .ventas-table td { border:1px solid #333; padding:0.7rem; text-align:center; }
-        .ventas-table th { background:#232323; color:#44ff99; }
-        .ventas-table tr:nth-child(even) { background:#232323; }
-    </style>
+    <link rel="stylesheet" href="../css/mis_ventas.css" />
 </head>
 <body>
     <header>
@@ -56,10 +51,10 @@ $ventas = VentaDAO::obtenerVentasPorVendedor($vendedor_id);
             </nav>
         </div>
     </header>
-    <main style="max-width:900px;margin:2rem auto;">
-        <h2 style="color:#44ff99;">Mis Ventas</h2>
+    <main class="main-container">
+        <h2 class="section-title">Mis Ventas</h2>
         <?php if (empty($ventas)): ?>
-            <div style="color:#eab308;">No tienes ventas registradas.</div>
+            <div class="warning-label">No tienes ventas registradas.</div>
         <?php else: ?>
         <table class="ventas-table">
             <thead>

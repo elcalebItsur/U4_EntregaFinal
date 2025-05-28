@@ -155,6 +155,26 @@ footer { margin-top: 3rem; background: #232323; border-radius: 10px 10px 0 0; }
     text-align: center;
     position: relative;
 }
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.section-title {
+    color: #44ff99;
+}
+.modal-margin {
+    margin: 1rem 0;
+}
+.modal-btn-group {
+    display: flex;
+    gap: 1rem;
+}
+.user-modal-avatar-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
 @media (max-width: 900px) {
             .hero { flex-direction: column; text-align:center; }
             .hero-img { text-align:center; margin-top:1.5rem; }
@@ -206,6 +226,41 @@ footer { margin-top: 3rem; background: #232323; border-radius: 10px 10px 0 0; }
     font-weight: bold;
     color: #181818;
     font-size: 1.7rem;
+}
+.user-modal-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 8px #0003;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    background: #44ff99;
+    color: #181818;
+    font-size: 2.2rem;
+}
+.user-modal-info {
+    text-align: center;
+}
+.user-modal-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+.user-modal-email {
+    color: #aaa;
+    font-size: 0.98rem;
+}
+.user-modal-warning {
+    color: #eab308;
+    font-size: 1.2rem;
+}
+.user-modal-tienda {
+    color: #eab308;
+    font-size: 0.98rem;
+    margin-bottom: 0.2rem;
+    text-align: center;
 }
 @media (max-width: 600px) {
     .producto-card {

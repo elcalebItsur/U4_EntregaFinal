@@ -340,9 +340,8 @@ main.profile-container > * {
     display: block;
 }
 .user-email {
-    color: #aaa;
-    font-size: 0.95rem;
     display: block;
+    color: #aaa;
 }
 .user-dropdown a {
     display: flex;
@@ -395,6 +394,10 @@ main.profile-container > * {
     gap: 1rem;
     justify-content: flex-start;
     align-items: center;
+}
+
+.bio-textarea {
+    resize: vertical;
 }
 
 @media (max-width: 600px) {

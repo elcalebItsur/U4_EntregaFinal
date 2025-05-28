@@ -1,0 +1,14 @@
+.ventas-table { width:100%; border-collapse:collapse; margin-top:2rem; }
+.ventas-table th, .ventas-table td { border:1px solid #333; padding:0.7rem; text-align:center; }
+.ventas-table th { background:#232323; color:#44ff99; }
+.ventas-table tr:nth-child(even) { background:#232323; }
+.main-container {
+    max-width: 900px;
+    margin: 2rem auto;
+}
+.section-title {
+    color: #44ff99;
+}
+.warning-label {
+    color: #eab308;
+}

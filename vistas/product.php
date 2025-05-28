@@ -9,14 +9,6 @@
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/product.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-    <style>
-        header { background: #181818; box-shadow: none; border-bottom: 1.5px solid #232323; }
-        .header-content { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 1.2rem 2rem; }
-        .logo { font-size:2rem; color:#44ff99; font-weight:700; letter-spacing:1px; cursor:pointer; margin-right:2rem; }
-        nav ul { display: flex; gap: 1.2rem; align-items: center; list-style: none; }
-        nav ul li { display: flex; align-items: center; }
-        nav ul li a, nav ul li span { font-size: 1rem; }
-    </style>
 </head>
 <body>
     <!-- Reemplazar solo la parte del header (desde <header> hasta </header>) con este código: -->
@@ -33,12 +25,12 @@
                         <button class="user-btn" id="user-menu-btn">
                             <i class="fas fa-user-circle"></i>
                             <?php echo htmlspecialchars($_SESSION['usuario']); ?>
-                            <i class="fas fa-chevron-down" style="font-size:0.8rem;"></i>
+                            <i class="fas fa-chevron-down chevron-icon"></i>
                         </button>
                         <div class="user-dropdown" id="user-dropdown">
                             <div class="user-info">
                                 <?php echo htmlspecialchars($_SESSION['usuario']); ?>
-                                <small style="display:block;color:#aaa;"><?php echo htmlspecialchars($_SESSION['email']); ?></small>
+                                <small class="user-email"> <?php echo htmlspecialchars($_SESSION['email']); ?> </small>
                             </div>
                             <a href="perfil.php"><i class="fas fa-user"></i> Mi perfil</a>
                             <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'Vendedor'): ?>
@@ -59,7 +51,7 @@
     </div>
 </header>
     <main class="vista-producto">
-        <img src="ver_imagen.php?id=1" alt="Camisa Moderna" style="max-width:350px;border-radius:14px;box-shadow:0 4px 16px #0003;" />
+        <img src="ver_imagen.php?id=1" alt="Camisa Moderna" class="producto-imagen" />
         <div class="info">
             <h2>Camisa Polo</h2>
             <p>Descripción del producto. Tallas disponibles: S, M, L, XL.</p>

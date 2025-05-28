@@ -53,10 +53,10 @@ $carrito = CarritoDAO::obtenerCarrito($usuario_id);
 </head>
 <body>
     <?php include 'header.php'; ?>
-    <main style="max-width: 900px; margin: 0 auto;">
-        <h2 style="color:#44ff99;text-align:center;margin-bottom:2rem;">Tu Carrito</h2>
+    <main class="main-container">
+        <h2 class="section-title cart-title">Tu Carrito</h2>
         <?php if ($mensaje): ?>
-            <div style="background:#232323;color:#44ff99;padding:1rem;border-radius:8px;margin-bottom:1rem;">
+            <div class="cart-warning">
                 <?php echo htmlspecialchars($mensaje); ?>
             </div>
         <?php endif; ?>
@@ -68,13 +68,13 @@ $carrito = CarritoDAO::obtenerCarrito($usuario_id);
                 <?php foreach ($carrito as $item): ?>
                     <?php $subtotal += $item['precio'] * $item['cantidad']; ?>
                     <div class="item-carrito">
-                        <img src="../assets/images/<?php echo htmlspecialchars($item['imagen'] ?? 'hero_image.jpg'); ?>" alt="<?php echo htmlspecialchars($item['nombre']); ?>" style="width:60px;height:60px;object-fit:cover;border-radius:8px;">
-                        <div style="flex:1;margin-left:1rem;">
-                            <p style="font-weight:600;"> <?php echo htmlspecialchars($item['nombre']); ?> </p>
+                        <img src="../assets/images/<?php echo htmlspecialchars($item['imagen'] ?? 'hero_image.jpg'); ?>" alt="<?php echo htmlspecialchars($item['nombre']); ?>" class="cart-thumb" />
+                        <div class="cart-item-info">
+                            <p class="cart-item-title"> <?php echo htmlspecialchars($item['nombre']); ?> </p>
                             <p>Cantidad: <?php echo $item['cantidad']; ?> | Stock: <?php echo $item['stock']; ?></p>
                             <p>Precio: $<?php echo number_format($item['precio'],2); ?></p>
                         </div>
-                        <form method="get" action="cart.php" style="margin-left:1rem;">
+                        <form method="get" action="cart.php" class="cart-item-form">
                             <input type="hidden" name="eliminar" value="<?php echo $item['producto_id']; ?>">
                             <button type="submit" class="btn-danger">Eliminar</button>
                         </form>
@@ -94,6 +94,9 @@ $carrito = CarritoDAO::obtenerCarrito($usuario_id);
             <?php endif; ?>
         </div>
     </main>
+    <div style="text-align:center; margin: 2rem 0;">
+        <a href="index.php" class="btn-primary" style="padding:0.7rem 2rem; font-size:1.1rem; border-radius:8px; text-decoration:none;">Seguir comprando</a>
+    </div>
     <?php include 'footer.php'; ?>
 </body>
 </html>

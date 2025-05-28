@@ -1,0 +1,92 @@
+.form-producto {
+    background: #232323;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px #0005;
+    padding: 2.5rem 2rem 2rem 2rem;
+    max-width: 480px;
+    margin: 2.5rem auto;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    border: 1.5px solid #44ff99;
+}
+.form-producto h2 {
+    color: #44ff99;
+    text-align: center;
+    margin-bottom: 1.2rem;
+    font-size: 2rem;
+    letter-spacing: 1px;
+}
+.form-producto input[type="text"],
+.form-producto input[type="number"],
+.form-producto input[type="file"],
+.form-producto textarea {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    border: 1.5px solid #333;
+    background: #181818;
+    color: #fff;
+    font-size: 1rem;
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
+    transition: border 0.2s;
+}
+.form-producto input[type="text"]:focus,
+.form-producto input[type="number"]:focus,
+.form-producto textarea:focus {
+    border: 1.5px solid #44ff99;
+    outline: none;
+}
+.form-producto label {
+    color: #eab308;
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+}
+.form-producto .img-preview {
+    display: block;
+    margin: 0.5rem auto 1rem auto;
+    max-width: 140px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px #0003;
+}
+.form-producto .form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.2rem;
+}
+.form-producto button,
+.form-producto .btn-danger {
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.form-producto button.btn-add {
+    background: #44ff99;
+    color: #181818;
+}
+.form-producto button.btn-add:hover {
+    background: #22d37b;
+    color: #fff;
+}
+.form-producto button.btn-edit {
+    background: #eab308;
+    color: #181818;
+}
+.form-producto button.btn-edit:hover {
+    background: #facc15;
+    color: #232323;
+}
+.form-producto .btn-danger {
+    background: #e63946;
+    color: #fff;
+}
+.form-producto .btn-danger:hover {
+    background: #b91c1c;
+}

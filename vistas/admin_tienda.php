@@ -11,8 +11,16 @@ $mensaje = '';
 // Eliminar producto
 if (isset($_GET['eliminar'])) {
     $id = intval($_GET['eliminar']);
-    ProductoDAO::eliminar($id, $vendedor_id);
-    $mensaje = 'Producto eliminado correctamente.';
+    try {
+        ProductoDAO::eliminar($id, $vendedor_id);
+        $mensaje = 'Producto eliminado correctamente.';
+    } catch (PDOException $e) {
+        if (strpos($e->getMessage(), '23503') !== false) {
+            $mensaje = 'No se puede eliminar el producto porque ya tiene ventas asociadas.';
+        } else {
+            $mensaje = 'Error al eliminar el producto: ' . $e->getMessage();
+        }
+    }
 }
 // Obtener productos del vendedor
 $productos = ProductoDAO::obtenerPorVendedor($vendedor_id);
@@ -23,18 +31,7 @@ $productos = ProductoDAO::obtenerPorVendedor($vendedor_id);
     <meta charset="UTF-8" />
     <title>Administrar Tienda</title>
     <link rel="stylesheet" href="../css/main.css" />
-    <style>
-        .admin-container { max-width: 900px; margin: 2rem auto; background: #1e1e1e; border-radius: 14px; padding: 2rem; box-shadow: 0 4px 16px #0002; }
-        .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
-        .admin-header h2 { color: #44ff99; }
-        .admin-table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
-        .admin-table th, .admin-table td { padding: 0.7rem 1rem; border-bottom: 1px solid #232323; color: #fff; }
-        .admin-table th { background: #232323; color: #44ff99; }
-        .admin-table tr:last-child td { border-bottom: none; }
-        .btn-danger { background: #ff6b6b; color: #fff; border: none; padding: 0.4rem 1rem; border-radius: 6px; cursor: pointer; }
-        .btn-edit { background: #eab308; color: #181818; border: none; padding: 0.4rem 1rem; border-radius: 6px; cursor: pointer; margin-right: 0.5rem; }
-        .btn-add { background: #44ff99; color: #181818; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; font-weight: bold; }
-    </style>
+    <link rel="stylesheet" href="../css/admin_tienda.css" />
 </head>
 <body>
     <header>
@@ -55,7 +52,7 @@ $productos = ProductoDAO::obtenerPorVendedor($vendedor_id);
             <a href="agregar_producto.php" class="btn-add">Agregar Producto</a>
         </div>
         <?php if ($mensaje): ?>
-            <div style="background:#232323;color:#44ff99;padding:1rem;border-radius:8px;margin-bottom:1rem;">
+            <div class="admin-warning">
                 <?php echo htmlspecialchars($mensaje); ?>
             </div>
         <?php endif; ?>
