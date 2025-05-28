@@ -1,6 +1,5 @@
-// Elimina la declaración duplicada de productos si existe en otro archivo o en este mismo archivo
+
 if (window.productos) {
-    // Ya está declarado, no lo redeclares
 } else {
     window.productos = [
         {id: 1, nombre: 'Camisa Polo', precio: 129.99, descripcion: 'Camisa casual para hombre.', imagen: '../assets/images/camisa1.webp', categoria: 'Hombre', temporada: false, oferta: true, precioOriginal: 179.99},

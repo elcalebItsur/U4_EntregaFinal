@@ -3,7 +3,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     var avatarBtn = document.getElementById('user-avatar-btn');
     var userModal = document.getElementById('user-modal');
-    // Asegúrate de que el modal NO se muestre al cargar la página
+
     if (userModal) userModal.style.display = 'none';
     // Permitir abrir el modal solo al hacer clic en el avatar o en el div.avatar-inicial.user-modal-avatar
     function openUserModal(e) {
