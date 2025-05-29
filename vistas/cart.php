@@ -10,7 +10,6 @@ if (!isset($_SESSION['usuario_id'])) {
 $usuario_id = $_SESSION['usuario_id'];
 $mensaje = '';
 
-// Agregar producto al carrito SOLO por formulario tradicional (sin AJAX)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregar']) && isset($_POST['productoId'])) {
     $producto_id = intval($_POST['productoId']);
     $cantidad = isset($_POST['cantidad']) ? max(1, intval($_POST['cantidad'])) : 1;
@@ -49,7 +48,6 @@ $carrito = CarritoDAO::obtenerCarrito($usuario_id);
     <title>Carrito - Textisur</title>
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/cart.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
 <body>
     <?php include 'header.php'; ?>

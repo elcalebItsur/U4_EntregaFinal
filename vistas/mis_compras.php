@@ -27,7 +27,9 @@ $ventas = VentaDAO::obtenerVentasPorUsuario($usuario_id);
         <?php if (empty($ventas)): ?>
             <div class="warning-label">No tienes compras registradas.</div>
         <?php else: ?>
-        <table class="ventas-table">
+        
+            <?php foreach ($ventas as $venta): ?>
+                <table class="ventas-table">
             <thead>
                 <tr>
                     <th>Fecha</th>
@@ -38,8 +40,8 @@ $ventas = VentaDAO::obtenerVentasPorUsuario($usuario_id);
                 </tr>
             </thead>
             <tbody>
-            <?php foreach ($ventas as $venta): ?>
                 <?php
+                
                 $detalles = VentaDAO::obtenerDetallesVenta($venta['id']);
                 foreach ($detalles as $detalle):
                 $producto = ProductoDAO::obtenerPorId($detalle['producto_id']);
@@ -52,9 +54,10 @@ $ventas = VentaDAO::obtenerVentasPorUsuario($usuario_id);
                     <td>$<?php echo number_format($detalle['cantidad'] * $detalle['precio_unitario'],2); ?></td>
                 </tr>
                 <?php endforeach; ?>
-            <?php endforeach; ?>
-            </tbody>
+                </tbody>
         </table>
+            <?php endforeach; ?>
+            
         <?php endif; ?>
     </main>
     <div style="text-align:center; margin: 2rem 0;">

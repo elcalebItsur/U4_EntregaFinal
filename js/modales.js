@@ -67,7 +67,7 @@ function abrirModalCarrito(id, nombre, stock) {
   document.getElementById('modal-carrito').style.display = 'flex';
   document.getElementById('modal-carrito-nombre').textContent = nombre;
   document.getElementById('modal-carrito-mensaje').textContent = '';
-  // Reemplaza el botón por un formulario tradicional
+
   const modal = document.getElementById('modal-carrito');
   const formId = 'form-agregar-carrito-modal';
   let form = document.getElementById(formId);
@@ -83,8 +83,8 @@ function abrirModalCarrito(id, nombre, stock) {
         <button type="button" onclick="document.getElementById('modal-carrito').style.display='none'" class="btn-secondary">Cancelar</button>
       </div>
     </form>`;
-  // Inserta el formulario en el modal
-  const oldBtns = document.getElementById('btn-confirmar-carrito')?.parentNode;
+
+    const oldBtns = document.getElementById('btn-confirmar-carrito')?.parentNode;
   if (oldBtns) oldBtns.innerHTML = '';
   document.getElementById('modal-carrito-mensaje').insertAdjacentHTML('afterend', formHtml);
 }
