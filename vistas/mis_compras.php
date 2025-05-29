@@ -30,17 +30,17 @@ $ventas = VentaDAO::obtenerVentasPorUsuario($usuario_id);
         
             <?php foreach ($ventas as $venta): ?>
                 <table class="ventas-table">
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Precio Unitario</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            <?php
                 
                 $detalles = VentaDAO::obtenerDetallesVenta($venta['id']);
                 foreach ($detalles as $detalle):
@@ -54,8 +54,8 @@ $ventas = VentaDAO::obtenerVentasPorUsuario($usuario_id);
                     <td>$<?php echo number_format($detalle['cantidad'] * $detalle['precio_unitario'],2); ?></td>
                 </tr>
                 <?php endforeach; ?>
-                </tbody>
-        </table>
+                    </tbody>
+                    </table>
             <?php endforeach; ?>
             
         <?php endif; ?>

@@ -44,4 +44,19 @@ class VentaDAO {
         $stmt->execute([$venta_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public static function obtenerVentasPorVendedorAgrupadas($vendedor_id) {
+        global $pdo;
+        // Paso 1: Obtener ventas únicas donde el vendedor participó
+        $stmt = $pdo->prepare('SELECT DISTINCT v.id, v.fecha FROM ventas v JOIN detalle_venta dv ON v.id = dv.venta_id WHERE dv.vendedor_id = ? ORDER BY v.fecha DESC');
+        $stmt->execute([$vendedor_id]);
+        $ventas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Paso 2: Para cada venta, obtener los productos vendidos por ese vendedor
+        foreach ($ventas as &$venta) {
+            $stmt2 = $pdo->prepare('SELECT * FROM detalle_venta WHERE venta_id = ? AND vendedor_id = ?');
+            $stmt2->execute([$venta['id'], $vendedor_id]);
+            $venta['detalles'] = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return $ventas;
+    }
 }

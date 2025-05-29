@@ -7,7 +7,7 @@ if (!isset($_SESSION['usuario']) || $_SESSION['tipo'] !== 'Vendedor') {
     exit();
 }
 $vendedor_id = $_SESSION['usuario_id'];
-$ventas = VentaDAO::obtenerVentasPorVendedor($vendedor_id);
+$ventas = VentaDAO::obtenerVentasPorVendedorAgrupadas($vendedor_id);
 ?><!DOCTYPE html>
 <html lang="es">
 <head>
@@ -56,29 +56,31 @@ $ventas = VentaDAO::obtenerVentasPorVendedor($vendedor_id);
         <?php if (empty($ventas)): ?>
             <div class="warning-label">No tienes ventas registradas.</div>
         <?php else: ?>
-        <table class="ventas-table">
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Precio Unitario</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
             <?php foreach ($ventas as $venta): ?>
-                <?php $producto = ProductoDAO::obtenerPorId($venta['producto_id']); ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($venta['fecha']); ?></td>
-                    <td><?php echo htmlspecialchars($producto['nombre'] ?? ''); ?></td>
-                    <td><?php echo htmlspecialchars($venta['cantidad']); ?></td>
-                    <td>$<?php echo number_format($venta['precio_unitario'],2); ?></td>
-                    <td>$<?php echo number_format($venta['cantidad'] * $venta['precio_unitario'],2); ?></td>
-                </tr>
+                <table class="ventas-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($venta['detalles'] as $detalle): ?>
+                            <?php $producto = ProductoDAO::obtenerPorId($detalle['producto_id']); ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($venta['fecha']); ?></td>
+                                <td><?php echo htmlspecialchars($producto['nombre'] ?? ''); ?></td>
+                                <td><?php echo htmlspecialchars($detalle['cantidad']); ?></td>
+                                <td>$<?php echo number_format($detalle['precio_unitario'],2); ?></td>
+                                <td>$<?php echo number_format($detalle['cantidad'] * $detalle['precio_unitario'],2); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
             <?php endforeach; ?>
-            </tbody>
-        </table>
         <?php endif; ?>
     </main>
 </body>
