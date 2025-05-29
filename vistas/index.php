@@ -51,6 +51,9 @@ if ($categoriaSeleccionada) {
                     <?php if (isset($_SESSION['usuario'])): ?>
                         <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'Vendedor'): ?>
                             <li><a href="admin_tienda.php" class="btn-primary">Administrar Tienda</a></li>
+                            <li><a href="mis_ventas.php" class="btn-secondary">Mis Ventas</a></li>
+                        <?php else: ?>
+                            <li><a href="mis_compras.php" class="btn-secondary">Mis Compras</a></li>
                         <?php endif; ?>
                         <li class="user-menu">
                             <button class="user-avatar-btn" id="user-avatar-btn">
@@ -93,6 +96,11 @@ if ($categoriaSeleccionada) {
             <ul class="user-menu-list">
                 <li><a href="perfil.php"><i class="fa fa-edit"></i> Editar perfil</a></li>
                 <li><a href="ver_perfil.php"><i class="fa fa-user"></i> Ver perfil</a></li>
+                <?php if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'Vendedor'): ?>
+                    <li><a href="mis_ventas.php"><i class="fa fa-store"></i> Mis Ventas</a></li>
+                <?php else: ?>
+                    <li><a href="mis_compras.php"><i class="fa fa-shopping-bag"></i> Mis Compras</a></li>
+                <?php endif; ?>
                 <li><a href="../logout.php"><i class="fa fa-sign-out-alt"></i> Cerrar sesión</a></li>
             </ul>
         </div>
