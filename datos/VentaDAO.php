@@ -64,4 +64,16 @@ class VentaDAO {
         }
         return $ventas;
     }
+    public static function obtenerDatosCompradorPorVenta($venta_id) {
+        global $pdo;
+        $stmt = $pdo->prepare('SELECT u.nombre, u.direccion FROM ventas v JOIN usuarios u ON v.usuario_id = u.id WHERE v.id = ?');
+        $stmt->execute([$venta_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    public static function obtenerNombreTiendaPorProducto($producto_id) {
+        global $pdo;
+        $stmt = $pdo->prepare('SELECT u.nombre_tienda FROM productos p JOIN usuarios u ON p.vendedor_id = u.id WHERE p.id = ?');
+        $stmt->execute([$producto_id]);
+        return $stmt->fetchColumn();
+    }
 }

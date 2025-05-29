@@ -65,6 +65,7 @@ if (isset($_POST['atender_detalle'])) {
             <div class="warning-label">No tienes ventas registradas.</div>
         <?php else: ?>
             <?php foreach ($ventas as $venta): ?>
+                <?php $comprador = VentaDAO::obtenerDatosCompradorPorVenta($venta['id']); ?>
                 <table class="ventas-table">
                     <thead>
                         <tr>
@@ -74,6 +75,11 @@ if (isset($_POST['atender_detalle'])) {
                             <th>Precio Unitario</th>
                             <th>Total</th>
                             <th>Acciones</th>
+                        </tr>
+                        <tr>
+                            <td colspan="6" style="background:#f7f7f7; color:#333; font-size:0.98em;">
+                                <strong>Comprador:</strong> <?php echo htmlspecialchars($comprador['nombre'] ?? ''); ?> &nbsp; | &nbsp; <strong>Dirección:</strong> <?php echo htmlspecialchars($comprador['direccion'] ?? ''); ?>
+                            </td>
                         </tr>
                     </thead>
                     <tbody>

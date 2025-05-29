@@ -41,6 +41,7 @@ $ventas = VentaDAO::obtenerVentasPorUsuario($usuario_id);
                             <th>Cantidad</th>
                             <th>Precio Unitario</th>
                             <th>Total</th>
+                            <th>Tienda</th>
                             <th>Estatus</th>
                         </tr>
                     </thead>
@@ -48,6 +49,7 @@ $ventas = VentaDAO::obtenerVentasPorUsuario($usuario_id);
                 <?php
                 foreach ($detalles as $detalle):
                     $producto = ProductoDAO::obtenerPorId($detalle['producto_id']);
+                    $nombre_tienda = VentaDAO::obtenerNombreTiendaPorProducto($detalle['producto_id']);
                     if (empty($detalle['atendido']) || $detalle['atendido'] == false) {
                         $todos_atendidos = false;
                     }
@@ -58,6 +60,7 @@ $ventas = VentaDAO::obtenerVentasPorUsuario($usuario_id);
                     <td><?php echo htmlspecialchars($detalle['cantidad']); ?></td>
                     <td>$<?php echo number_format($detalle['precio_unitario'],2); ?></td>
                     <td>$<?php echo number_format($detalle['cantidad'] * $detalle['precio_unitario'],2); ?></td>
+                    <td><?php echo htmlspecialchars($nombre_tienda ?? ''); ?></td>
                     <td>
                         <?php if (empty($detalle['atendido']) || $detalle['atendido'] == false): ?>
                             <span style="color:orange;font-weight:bold;">En proceso</span>
