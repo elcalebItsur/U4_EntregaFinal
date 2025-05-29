@@ -8,6 +8,14 @@ if (!isset($_SESSION['usuario']) || $_SESSION['tipo'] !== 'Vendedor') {
 }
 $vendedor_id = $_SESSION['usuario_id'];
 $ventas = VentaDAO::obtenerVentasPorVendedorAgrupadas($vendedor_id);
+
+if (isset($_POST['atender_detalle'])) {
+    $detalle_id = intval($_POST['detalle_id']);
+    require_once '../datos/VentaDAO.php';
+    VentaDAO::marcarDetalleAtendido($detalle_id);
+    // Recargar ventas después de actualizar
+    $ventas = VentaDAO::obtenerVentasPorVendedorAgrupadas($vendedor_id);
+}
 ?><!DOCTYPE html>
 <html lang="es">
 <head>
@@ -65,6 +73,7 @@ $ventas = VentaDAO::obtenerVentasPorVendedorAgrupadas($vendedor_id);
                             <th>Cantidad</th>
                             <th>Precio Unitario</th>
                             <th>Total</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -76,6 +85,16 @@ $ventas = VentaDAO::obtenerVentasPorVendedorAgrupadas($vendedor_id);
                                 <td><?php echo htmlspecialchars($detalle['cantidad']); ?></td>
                                 <td>$<?php echo number_format($detalle['precio_unitario'],2); ?></td>
                                 <td>$<?php echo number_format($detalle['cantidad'] * $detalle['precio_unitario'],2); ?></td>
+                                <td>
+                                    <?php if (empty($detalle['atendido']) || $detalle['atendido'] == false): ?>
+                                        <form method="post" style="display:inline;">
+                                            <input type="hidden" name="detalle_id" value="<?php echo $detalle['id']; ?>">
+                                            <button type="submit" name="atender_detalle" class="btn-primary" style="padding:0.3rem 1rem; font-size:0.95rem;">Atender</button>
+                                        </form>
+                                    <?php else: ?>
+                                        <span style="color:green;font-weight:bold;">Atendido</span>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

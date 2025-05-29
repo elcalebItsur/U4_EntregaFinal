@@ -38,6 +38,11 @@ class VentaDAO {
         $stmt->execute([$vendedor_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public static function marcarDetalleAtendido($detalle_id) {
+        global $pdo;
+        $stmt = $pdo->prepare('UPDATE detalle_venta SET atendido = TRUE WHERE id = ?');
+        return $stmt->execute([$detalle_id]);
+    }
     public static function obtenerDetallesVenta($venta_id) {
         global $pdo;
         $stmt = $pdo->prepare('SELECT * FROM detalle_venta WHERE venta_id = ?');

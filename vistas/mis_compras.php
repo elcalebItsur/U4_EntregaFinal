@@ -29,6 +29,10 @@ $ventas = VentaDAO::obtenerVentasPorUsuario($usuario_id);
         <?php else: ?>
         
             <?php foreach ($ventas as $venta): ?>
+                <?php
+                $detalles = VentaDAO::obtenerDetallesVenta($venta['id']);
+                $todos_atendidos = true;
+                ?>
                 <table class="ventas-table">
                     <thead>
                         <tr>
@@ -37,14 +41,16 @@ $ventas = VentaDAO::obtenerVentasPorUsuario($usuario_id);
                             <th>Cantidad</th>
                             <th>Precio Unitario</th>
                             <th>Total</th>
+                            <th>Estatus</th>
                         </tr>
                     </thead>
                     <tbody>
-            <?php
-                
-                $detalles = VentaDAO::obtenerDetallesVenta($venta['id']);
+                <?php
                 foreach ($detalles as $detalle):
-                $producto = ProductoDAO::obtenerPorId($detalle['producto_id']);
+                    $producto = ProductoDAO::obtenerPorId($detalle['producto_id']);
+                    if (empty($detalle['atendido']) || $detalle['atendido'] == false) {
+                        $todos_atendidos = false;
+                    }
                 ?>
                 <tr>
                     <td><?php echo htmlspecialchars($venta['fecha']); ?></td>
@@ -52,10 +58,20 @@ $ventas = VentaDAO::obtenerVentasPorUsuario($usuario_id);
                     <td><?php echo htmlspecialchars($detalle['cantidad']); ?></td>
                     <td>$<?php echo number_format($detalle['precio_unitario'],2); ?></td>
                     <td>$<?php echo number_format($detalle['cantidad'] * $detalle['precio_unitario'],2); ?></td>
+                    <td>
+                        <?php if (empty($detalle['atendido']) || $detalle['atendido'] == false): ?>
+                            <span style="color:orange;font-weight:bold;">En proceso</span>
+                        <?php else: ?>
+                            <span style="color:green;font-weight:bold;">Atendido</span>
+                        <?php endif; ?>
+                    </td>
                 </tr>
                 <?php endforeach; ?>
                     </tbody>
-                    </table>
+                </table>
+                <?php if ($todos_atendidos): ?>
+                    <div style="color:green; font-weight:bold; margin-bottom:1rem;">¡Esta compra está completamente atendida!</div>
+                <?php endif; ?>
             <?php endforeach; ?>
             
         <?php endif; ?>
